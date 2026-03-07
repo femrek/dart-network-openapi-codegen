@@ -42,3 +42,4 @@ build/
 
 generated-output/
 spec_samples/temp*
+openapi-generator-cli.jar
