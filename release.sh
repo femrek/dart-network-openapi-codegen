@@ -37,8 +37,8 @@ git tag "v$VERSION"
 echo "✅ Created tag v$VERSION"
 
 # Push
-git push origin
-git push origin "v$VERSION"
+git push origin main
+git push origin tag "v$VERSION"
 
 echo "🚀 Released v$VERSION successfully!"
 
