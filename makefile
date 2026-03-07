@@ -30,27 +30,7 @@ endif
 	   -o $(OUTPUT_DIR)
 
 pubget:
-	-cd generated-output/example1/dart-client && flutter pub get
-	-cd generated-output/example1/dart-dio-client && flutter pub get
-	-cd generated-output/example1/dart-network-client && flutter pub get
-	-cd generated-output/example2/dart-client && flutter pub get
-	-cd generated-output/example2/dart-dio-client && flutter pub get
-	-cd generated-output/example2/dart-network-client && flutter pub get
-	-cd generated-output/api-with-examples/dart-client && flutter pub get
-	-cd generated-output/api-with-examples/dart-dio-client && flutter pub get
-	-cd generated-output/api-with-examples/dart-network-client && flutter pub get
-	-cd generated-output/callback-example/dart-client && flutter pub get
-	-cd generated-output/callback-example/dart-dio-client && flutter pub get
-	-cd generated-output/callback-example/dart-network-client && flutter pub get
-	-cd generated-output/link-example/dart-client && flutter pub get
-	-cd generated-output/link-example/dart-dio-client && flutter pub get
-	-cd generated-output/link-example/dart-network-client && flutter pub get
-	-cd generated-output/petstore-expanded/dart-client && flutter pub get
-	-cd generated-output/petstore-expanded/dart-dio-client && flutter pub get
-	-cd generated-output/petstore-expanded/dart-network-client && flutter pub get
-	-cd generated-output/petstore/dart-client && flutter pub get
-	-cd generated-output/petstore/dart-dio-client && flutter pub get
-	-cd generated-output/petstore/dart-network-client && flutter pub get
-	-cd generated-output/uspto/dart-client && flutter pub get
-	-cd generated-output/uspto/dart-dio-client && flutter pub get
-	-cd generated-output/uspto/dart-network-client && flutter pub get
+	for dir in generated-output/*/dart-network-client; do \
+		echo "Running flutter pub get in $$dir"; \
+		cd $$dir && flutter pub get; cd -; \
+	done

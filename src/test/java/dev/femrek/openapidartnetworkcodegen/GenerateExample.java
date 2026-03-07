@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
 import static org.apache.commons.io.FileUtils.deleteDirectory;
 
@@ -25,18 +24,11 @@ public class GenerateExample {
         // Get the current directory
         String projectDir = System.getProperty("user.dir");
         String baseOutputDir = projectDir + "/generated-output";
-        List<String> specFiles = List.of(
-                "example1.yaml",
-                "example2.json",
-                "api-with-examples.json",
-                "callback-example.json",
-                "link-example.json",
-                "petstore-expanded.json",
-                "petstore.json",
-                "uspto.json"
-        );
+        String specDir = projectDir + "/spec_samples";
+        File[] specFiles = new File(specDir)
+                .listFiles((_, name) -> name.endsWith(".yaml") || name.endsWith(".json"));
 
-        System.out.println("Input Specs: " + specFiles);
+        System.out.println("Input Specs: " + (specFiles != null ? specFiles.length : 0) + " found in " + specDir);
         System.out.println("Base Output Directory: " + baseOutputDir);
         System.out.println();
 
@@ -52,22 +44,21 @@ public class GenerateExample {
             }
         }
 
-        for (String inputSpec : specFiles) {
+        assert specFiles != null;
+        for (File specFile : specFiles) {
             generateForSpec(
-                    projectDir + '/' + "spec_samples" + '/' + inputSpec,
-                    baseOutputDir + '/' + inputSpec.substring(0, inputSpec.lastIndexOf('.'))
+                    specFile,
+                    baseOutputDir + '/' + specFile.getName().substring(0, specFile.getName().lastIndexOf('.'))
             );
         }
     }
 
     private static void generateForSpec(
-            String inputSpec,
+            File specFile,
             String baseOutputDir
     ) {
-        // Check if input spec exists
-        File specFile = new File(inputSpec);
         if (!specFile.exists()) {
-            System.err.println("ERROR: OpenAPI spec file not found at: " + inputSpec);
+            System.err.println("ERROR: OpenAPI spec file not found at: " + specFile.getAbsolutePath());
             System.exit(1);
         }
 
@@ -75,7 +66,7 @@ public class GenerateExample {
         GeneratorConfig[] generatorConfigs = {
 //                new GeneratorConfig("dart",         "Standard Dart Client",          "dart-client"),
 //                new GeneratorConfig("dart-dio",     "Dart Dio Client",               "dart-dio-client"),
-                new GeneratorConfig("dart-network", "Dart Network Client (Custom)",  "dart-network-client"),
+                new GeneratorConfig("dart-network", "Dart Network Client (Custom)", "dart-network-client"),
         };
 
         boolean allSuccessful = true;
@@ -83,9 +74,9 @@ public class GenerateExample {
         // Generate code with each generator
         for (int i = 0; i < generatorConfigs.length; i++) {
             GeneratorConfig config = generatorConfigs[i];
-            String generator   = config.generatorName();
+            String generator = config.generatorName();
             String description = config.description();
-            String outputDir   = baseOutputDir + "/" + config.folderName();
+            String outputDir = baseOutputDir + "/" + config.folderName();
 
             System.out.println("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
             System.out.println("Generator " + (i + 1) + "/" + generatorConfigs.length + ": " + description);
@@ -96,7 +87,7 @@ public class GenerateExample {
 
             try {
                 // Configure the code generator
-                CodegenConfigurator configurator = getCodegenConfigurator(inputSpec, outputDir, generator);
+                CodegenConfigurator configurator = getCodegenConfigurator(specFile, outputDir, generator);
 
                 System.out.println("  ⚙️  Configuring generator...");
                 ClientOptInput clientOptInput = configurator.toClientOptInput();
@@ -140,15 +131,15 @@ public class GenerateExample {
         }
     }
 
-    private static @NonNull CodegenConfigurator getCodegenConfigurator(String inputSpec, String outputDir, String generatorName) {
+    private static @NonNull CodegenConfigurator getCodegenConfigurator(File specFile, String outputDir, String generatorName) {
         // Derive the package name from the spec filename (without extension), converted to snake_case
-        String specFileName = new File(inputSpec).getName();
+        String specFileName = specFile.getName();
         String specBaseName = specFileName.substring(0, specFileName.lastIndexOf('.'));
         String pubName = specBaseName.replaceAll("[^a-zA-Z0-9]", "_").toLowerCase();
 
         CodegenConfigurator configurator = new CodegenConfigurator();
         configurator.setGeneratorName(generatorName);
-        configurator.setInputSpec(inputSpec);
+        configurator.setInputSpec(specFile.getAbsolutePath());
         configurator.setOutputDir(outputDir);
         configurator.setPackageName(pubName);
         configurator.setApiPackage("api");
@@ -186,6 +177,7 @@ public class GenerateExample {
         }
     }
 
-    private record GeneratorConfig(String generatorName, String description, String folderName) {}
+    private record GeneratorConfig(String generatorName, String description, String folderName) {
+    }
 }
 
