@@ -207,7 +207,12 @@ public class DartNetworkClientCodegen extends AbstractDartCodegen {
 
                 // Determine the return schema name
                 if (op.returnType != null && !op.returnType.isEmpty()) {
-                    if (op.returnType.startsWith("List<")) {
+                    if ("MultipartFileSchema".equals(op.returnType)) {
+                        // Binary response (e.g. application/octet-stream) — use BinarySchema
+                        op.vendorExtensions.put("x-has-return-type", false);
+                        op.vendorExtensions.put("x-is-binary-response", true);
+                        op.vendorExtensions.put("x-return-schema-name", "BinarySchema");
+                    } else if (op.returnType.startsWith("List<")) {
                         String innerType = op.returnType.substring(5, op.returnType.length() - 1);
                         if (isDartBuiltinType(innerType)) {
                             // List of primitives/builtins — use AnyDataSchema
@@ -269,7 +274,9 @@ public class DartNetworkClientCodegen extends AbstractDartCodegen {
 
                 // Collect imports for all parameter types that reference models (e.g., enums used as query params)
                 for (CodegenParameter param : op.allParams) {
-                    if (param.isBodyParam || param.isFormParam) continue;
+                    if (param.isBodyParam) continue;
+                    // For form params, skip file types (they use MultipartFileSchema from dart_network_layer_core)
+                    if (param.isFormParam && param.isFile) continue;
                     String dt = param.dataType;
                     if (!isDartBuiltinType(dt)) {
                         String paramTypeFile = toSnakeCaseFilename(dt);

@@ -113,7 +113,10 @@ class {{{vendorExtensions.x-operation-id-pascal}}}Command extends {{x-dart-base-
     {{#required}}required {{/required}}{{{dataType}}}{{^required}}?{{/required}} {{{paramName}}},
   {{/formParams}}
   {{/vendorExtensions.x-is-multipart}}
-  }{{/hasParams}}){{#vendorExtensions.x-has-json-body}} : _payload = {{{vendorExtensions.x-operation-id-pascal}}}RequestSchema(data: {{{bodyParam.paramName}}}){{/vendorExtensions.x-has-json-body}}{{#vendorExtensions.x-is-multipart}} : _payload = {{{vendorExtensions.x-operation-id-pascal}}}RequestSchema(
+  {{#vendorExtensions.x-is-binary-response}}
+    this.binaryResponseType = const InMemoryBinaryResponse(),
+  {{/vendorExtensions.x-is-binary-response}}
+  }{{/hasParams}}{{^hasParams}}{{#vendorExtensions.x-is-binary-response}}({BinaryResponseType this._binaryResponseType = const InMemoryBinaryResponse()}){{/vendorExtensions.x-is-binary-response}}{{/hasParams}}){{#vendorExtensions.x-has-json-body}} : _payload = {{{vendorExtensions.x-operation-id-pascal}}}RequestSchema(data: {{{bodyParam.paramName}}}){{/vendorExtensions.x-has-json-body}}{{#vendorExtensions.x-is-multipart}} : _payload = {{{vendorExtensions.x-operation-id-pascal}}}RequestSchema(
         {{#formParams}}
           {{{paramName}}}: {{{paramName}}},
         {{/formParams}}
@@ -136,6 +139,11 @@ class {{{vendorExtensions.x-operation-id-pascal}}}Command extends {{x-dart-base-
   {{#vendorExtensions.x-is-multipart}}
   final {{{vendorExtensions.x-operation-id-pascal}}}RequestSchema _payload;
   {{/vendorExtensions.x-is-multipart}}
+
+  {{#vendorExtensions.x-is-binary-response}}
+  @override
+  final BinaryResponseType binaryResponseType;
+  {{/vendorExtensions.x-is-binary-response}}
 
   @override
   String get path {
@@ -164,7 +172,12 @@ class {{{vendorExtensions.x-operation-id-pascal}}}Command extends {{x-dart-base-
   HttpRequestMethod get method => HttpRequestMethod.{{{vendorExtensions.x-http-method-enum}}};
 
   @override
+  {{#vendorExtensions.x-is-binary-response}}
+  SchemaFactory<{{{vendorExtensions.x-return-schema-name}}}> get defaultResponseFactory => InMemoryBinarySchema.factory;
+  {{/vendorExtensions.x-is-binary-response}}
+  {{^vendorExtensions.x-is-binary-response}}
   SchemaFactory<{{{vendorExtensions.x-return-schema-name}}}> get defaultResponseFactory => {{{vendorExtensions.x-return-schema-name}}}.factory;
+  {{/vendorExtensions.x-is-binary-response}}
 
   @override
   SchemaFactory get defaultErrorResponseFactory => IgnoredSchema.factory;
