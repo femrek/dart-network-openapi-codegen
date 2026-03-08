@@ -241,7 +241,7 @@ public class DartNetworkClientCodegen extends AbstractDartCodegen {
                         enumDef.put("enumVars", enumVars);
                         inlineEnumsByName.put(enumClassName, enumDef);
                     }
-                    uniqueModelImports.add(enumFileName);
+                    // Do NOT add to uniqueModelImports — the enum is emitted inline in the command file
                 }
                 // Second pass: apply vendor extensions to ALL param sub-lists
                 for (List<CodegenParameter> paramList : allParamLists) {
