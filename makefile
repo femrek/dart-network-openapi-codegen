@@ -1,6 +1,6 @@
 OPENAPI_CODEGEN_JAR := ./openapi-generator-cli.jar
 OPENAPI_CODEGEN_VERSION := 7.20.0
-CUSTOM_CODEGEN_JAR := ./target/openapi-dart-network-codegen-1.0-SNAPSHOT.jar
+CUSTOM_CODEGEN_JAR := ./target/openapi-dart-network-codegen-0.1.2.jar
 GENERATOR := dart-network
 SPEC_DIR := ./spec_samples
 
@@ -30,7 +30,13 @@ endif
 	   -o $(OUTPUT_DIR)
 
 pubget:
-	for dir in generated-output/*/dart-network-client; do \
+	for dir in generated-output/*/*; do \
 		echo "Running flutter pub get in $$dir"; \
 		cd $$dir && flutter pub get; cd -; \
+	done
+
+build_runner:
+	for dir in generated-output/*/dart-dio-client; do \
+	    echo "Running flutter pub run build_runner build --delete-conflicting-outputs in $$dir"; \
+	    cd $$dir && flutter pub run build_runner build --delete-conflicting-outputs; cd -; \
 	done
