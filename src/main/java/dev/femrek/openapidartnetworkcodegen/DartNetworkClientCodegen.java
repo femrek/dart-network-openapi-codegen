@@ -194,7 +194,67 @@ public class DartNetworkClientCodegen extends AbstractDartCodegen {
             // Collect unique model file imports across all operations in this tag group
             Set<String> uniqueModelImports = new LinkedHashSet<>();
 
+            // Collect inline enum definitions (params with inline enum: [...]) to emit in the api file
+            // Key = enum class name, Value = map with enum metadata for mustache
+            Map<String, Map<String, Object>> inlineEnumsByName = new LinkedHashMap<>();
+
             for (CodegenOperation op : ops) {
+                // Detect inline enum parameters and assign them a stable class name.
+                // We iterate over ALL param sub-lists (allParams, queryParams, pathParams, headerParams)
+                // because Mustache iterates each list independently, and they may not share the same
+                // object references after framework processing.
+                List<List<CodegenParameter>> allParamLists = List.of(
+                        op.allParams, op.queryParams, op.pathParams, op.headerParams
+                );
+                // First pass: build the enum metadata from allParams
+                Map<String, String> paramNameToEnumClass = new LinkedHashMap<>();
+                for (CodegenParameter param : op.allParams) {
+                    if (!param.isEnum || param.isEnumRef) continue;
+                    if (param.allowableValues == null || param.allowableValues.isEmpty()) continue;
+
+                    String opPascal = StringUtils.camelize(op.operationId);
+                    String paramPascal = StringUtils.camelize(param.paramName);
+                    String enumClassName = opPascal + paramPascal + "Enum";
+                    String enumFileName = toSnakeCaseFilename(enumClassName);
+
+                    paramNameToEnumClass.put(param.paramName, enumClassName);
+
+                    if (!inlineEnumsByName.containsKey(enumClassName)) {
+                        Map<String, Object> enumDef = new LinkedHashMap<>();
+                        enumDef.put("enumClassName", enumClassName);
+                        enumDef.put("enumFileName", enumFileName);
+                        enumDef.put("dataType", param.dataType);
+                        enumDef.put("isString", param.isString);
+                        List<Map<String, Object>> enumVars = new ArrayList<>();
+                        @SuppressWarnings("unchecked")
+                        List<Object> values = (List<Object>) param.allowableValues.get("values");
+                        if (values != null) {
+                            for (Object v : values) {
+                                String strVal = v.toString();
+                                Map<String, Object> enumVar = new LinkedHashMap<>();
+                                enumVar.put("name", toEnumVarName(strVal, param.dataType));
+                                enumVar.put("value", toEnumValue(strVal, param.dataType));
+                                enumVar.put("isString", param.isString);
+                                enumVars.add(enumVar);
+                            }
+                        }
+                        enumDef.put("enumVars", enumVars);
+                        inlineEnumsByName.put(enumClassName, enumDef);
+                    }
+                    uniqueModelImports.add(enumFileName);
+                }
+                // Second pass: apply vendor extensions to ALL param sub-lists
+                for (List<CodegenParameter> paramList : allParamLists) {
+                    for (CodegenParameter param : paramList) {
+                        String enumClassName = paramNameToEnumClass.get(param.paramName);
+                        if (enumClassName != null) {
+                            String enumFileName = toSnakeCaseFilename(enumClassName);
+                            param.vendorExtensions.put("x-enum-class-name", enumClassName);
+                            param.vendorExtensions.put("x-enum-file-name", enumFileName);
+                            param.vendorExtensions.put("x-is-inline-enum", "true");
+                        }
+                    }
+                }
                 // Add custom vendor extensions for use in mustache templates
 
                 // Snake_case operation id for file naming
@@ -277,6 +337,8 @@ public class DartNetworkClientCodegen extends AbstractDartCodegen {
                     if (param.isBodyParam) continue;
                     // For form params, skip file types (they use MultipartFileSchema from dart_network_layer_core)
                     if (param.isFormParam && param.isFile) continue;
+                    // Inline enum params are handled separately above
+                    if (param.isEnum && !param.isEnumRef) continue;
                     String dt = param.dataType;
                     if (!isDartBuiltinType(dt)) {
                         String paramTypeFile = toSnakeCaseFilename(dt);
@@ -334,6 +396,11 @@ public class DartNetworkClientCodegen extends AbstractDartCodegen {
                 importsList.add(entry);
             }
             objs.put("x-unique-model-imports", importsList);
+
+            // Store inline enum definitions so the api.mustache template can emit them
+            List<Map<String, Object>> inlineEnumsList = new ArrayList<>(inlineEnumsByName.values());
+            objs.put("x-inline-enums", inlineEnumsList);
+            objs.put("x-has-inline-enums", !inlineEnumsList.isEmpty());
         }
 
         return objs;

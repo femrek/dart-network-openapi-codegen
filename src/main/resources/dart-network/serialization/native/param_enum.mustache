@@ -1,0 +1,55 @@
+class {{{enumClassName}}} {
+  /// Instantiate a new enum with the provided [value].
+  const {{{enumClassName}}}._(this.value);
+
+  /// The underlying value of this enum member.
+  final {{{dataType}}} value;
+
+  @override
+  String toString() => {{#isString}}value{{/isString}}{{^isString}}value.toString(){{/isString}};
+
+  {{{dataType}}} toJson() => value;
+
+  {{#enumVars}}
+  static const {{{name}}} = {{{enumClassName}}}._({{#isString}}r{{/isString}}{{{value}}});
+  {{/enumVars}}
+
+  /// List of all possible values in this [enum][{{{enumClassName}}}].
+  static const values = <{{{enumClassName}}}>[
+  {{#enumVars}}
+    {{{name}}},
+  {{/enumVars}}
+  ];
+
+  static {{{enumClassName}}}? fromJson(dynamic value) => {{{enumClassName}}}TypeTransformer().decode(value);
+}
+
+/// Transformation class that can [encode] an instance of [{{{enumClassName}}}] to {{{dataType}}},
+/// and [decode] dynamic data back to [{{{enumClassName}}}].
+class {{{enumClassName}}}TypeTransformer {
+  factory {{{enumClassName}}}TypeTransformer() => _instance ??= const {{{enumClassName}}}TypeTransformer._();
+
+  const {{{enumClassName}}}TypeTransformer._();
+
+  {{{dataType}}} encode({{{enumClassName}}} data) => data.value;
+
+  /// Decodes a [dynamic value][data] to a {{{enumClassName}}}.
+  {{{enumClassName}}}? decode(dynamic data, {bool allowNull = true}) {
+    if (data != null) {
+      switch (data) {
+        {{#enumVars}}
+        case {{#isString}}r{{/isString}}{{{value}}}: return {{{enumClassName}}}.{{{name}}};
+        {{/enumVars}}
+        default:
+          if (!allowNull) {
+            throw ArgumentError('Unknown enum value to decode: $data');
+          }
+      }
+    }
+    return null;
+  }
+
+  /// Singleton [{{{enumClassName}}}TypeTransformer] instance.
+  static {{{enumClassName}}}TypeTransformer? _instance;
+}
+

@@ -7,6 +7,10 @@ import '../../base/base_request.dart';
 import '../../model/{{{file}}}.dart';
 {{/x-unique-model-imports}}
 
+{{#x-inline-enums}}
+{{>serialization/native/param_enum}}
+
+{{/x-inline-enums}}
 {{#operations}}
 {{#operation}}
 
@@ -128,7 +132,12 @@ class {{{vendorExtensions.x-operation-id-pascal}}}Command extends {{x-dart-base-
   {{#description}}
   /// {{{.}}}
   {{/description}}
+  {{#vendorExtensions.x-is-inline-enum}}
+  final {{{vendorExtensions.x-enum-class-name}}}{{^required}}?{{/required}} {{{paramName}}};
+  {{/vendorExtensions.x-is-inline-enum}}
+  {{^vendorExtensions.x-is-inline-enum}}
   final {{{dataType}}}{{^required}}?{{/required}} {{{paramName}}};
+  {{/vendorExtensions.x-is-inline-enum}}
 
   {{/isFormParam}}
   {{/isBodyParam}}
@@ -149,7 +158,12 @@ class {{{vendorExtensions.x-operation-id-pascal}}}Command extends {{x-dart-base-
   String get path {
     var p = r'{{{path}}}';
     {{#pathParams}}
+    {{#vendorExtensions.x-is-inline-enum}}
+    p = p.replaceAll({{=<% %>=}}'{<% baseName %>}'<%={{ }}=%>, {{{paramName}}}.value.toString());
+    {{/vendorExtensions.x-is-inline-enum}}
+    {{^vendorExtensions.x-is-inline-enum}}
     p = p.replaceAll({{=<% %>=}}'{<% baseName %>}'<%={{ }}=%>, {{#isString}}{{{paramName}}}{{/isString}}{{^isString}}{{{paramName}}}.toString(){{/isString}});
+    {{/vendorExtensions.x-is-inline-enum}}
     {{/pathParams}}
     return p;
   }
@@ -158,12 +172,22 @@ class {{{vendorExtensions.x-operation-id-pascal}}}Command extends {{x-dart-base-
   @override
   List<QueryParameter> get queryParameters => [
     {{#queryParams}}
+    {{#vendorExtensions.x-is-inline-enum}}
+    {{#required}}
+    QueryParameter(key: r'{{{baseName}}}', value: {{{paramName}}}.value),
+    {{/required}}
+    {{^required}}
+    if ({{{paramName}}} != null) QueryParameter(key: r'{{{baseName}}}', value: {{{paramName}}}!.value),
+    {{/required}}
+    {{/vendorExtensions.x-is-inline-enum}}
+    {{^vendorExtensions.x-is-inline-enum}}
     {{#required}}
     QueryParameter(key: r'{{{baseName}}}', value: {{{paramName}}}),
     {{/required}}
     {{^required}}
     if ({{{paramName}}} != null) QueryParameter(key: r'{{{baseName}}}', value: {{{paramName}}}),
     {{/required}}
+    {{/vendorExtensions.x-is-inline-enum}}
     {{/queryParams}}
   ];
   {{/vendorExtensions.x-has-query-params}}
