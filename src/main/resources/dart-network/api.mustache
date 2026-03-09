@@ -138,22 +138,23 @@ class {{{vendorExtensions.x-operation-id-pascal}}}Command extends {{x-dart-base-
   {{^vendorExtensions.x-is-inline-enum}}
   final {{{dataType}}}{{^required}}?{{/required}} {{{paramName}}};
   {{/vendorExtensions.x-is-inline-enum}}
-
   {{/isFormParam}}
   {{/isBodyParam}}
   {{/allParams}}
+
   {{#vendorExtensions.x-has-json-body}}
   final {{{vendorExtensions.x-operation-id-pascal}}}RequestSchema _payload;
+
   {{/vendorExtensions.x-has-json-body}}
   {{#vendorExtensions.x-is-multipart}}
   final {{{vendorExtensions.x-operation-id-pascal}}}RequestSchema _payload;
-  {{/vendorExtensions.x-is-multipart}}
 
+  {{/vendorExtensions.x-is-multipart}}
   {{#vendorExtensions.x-is-binary-response}}
   @override
   final BinaryResponseType binaryResponseType;
-  {{/vendorExtensions.x-is-binary-response}}
 
+  {{/vendorExtensions.x-is-binary-response}}
   @override
   String get path {
     var p = r'{{{path}}}';
@@ -190,8 +191,8 @@ class {{{vendorExtensions.x-operation-id-pascal}}}Command extends {{x-dart-base-
     {{/vendorExtensions.x-is-inline-enum}}
     {{/queryParams}}
   ];
-  {{/vendorExtensions.x-has-query-params}}
 
+  {{/vendorExtensions.x-has-query-params}}
   @override
   HttpRequestMethod get method => HttpRequestMethod.{{{vendorExtensions.x-http-method-enum}}};
 
@@ -219,8 +220,8 @@ class {{{vendorExtensions.x-operation-id-pascal}}}Command extends {{x-dart-base-
       const EmptyRequestSchema();
   {{/vendorExtensions.x-is-multipart}}
   {{/vendorExtensions.x-has-json-body}}
-
   {{#vendorExtensions.x-has-header-params}}
+
   @override
   Map<String, dynamic> get headers => {
     {{#headerParams}}
