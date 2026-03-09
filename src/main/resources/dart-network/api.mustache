@@ -197,15 +197,34 @@ class {{{vendorExtensions.x-operation-id-pascal}}}Command extends {{x-dart-base-
   HttpRequestMethod get method => HttpRequestMethod.{{{vendorExtensions.x-http-method-enum}}};
 
   @override
+  {{#vendorExtensions.x-default-response-factory-expr}}
+  SchemaFactory<{{{vendorExtensions.x-return-schema-name}}}> get defaultResponseFactory => {{{vendorExtensions.x-default-response-factory-expr}}};
+  {{/vendorExtensions.x-default-response-factory-expr}}
+  {{^vendorExtensions.x-default-response-factory-expr}}
   {{#vendorExtensions.x-is-binary-response}}
   SchemaFactory<{{{vendorExtensions.x-return-schema-name}}}> get defaultResponseFactory => InMemoryBinarySchema.factory;
   {{/vendorExtensions.x-is-binary-response}}
   {{^vendorExtensions.x-is-binary-response}}
   SchemaFactory<{{{vendorExtensions.x-return-schema-name}}}> get defaultResponseFactory => {{{vendorExtensions.x-return-schema-name}}}.factory;
   {{/vendorExtensions.x-is-binary-response}}
+  {{/vendorExtensions.x-default-response-factory-expr}}
 
   @override
+  {{#vendorExtensions.x-has-error-response}}
+  SchemaFactory get defaultErrorResponseFactory => {{{vendorExtensions.x-default-error-factory-expr}}};
+  {{/vendorExtensions.x-has-error-response}}
+  {{^vendorExtensions.x-has-error-response}}
   SchemaFactory get defaultErrorResponseFactory => IgnoredSchema.factory;
+  {{/vendorExtensions.x-has-error-response}}
+
+  {{#vendorExtensions.x-has-response-factories}}
+  @override
+  Map<int, SchemaFactory> get responseFactories => {
+    {{#vendorExtensions.x-response-factory-entries}}
+    {{{statusCode}}}: {{{factoryExpr}}},
+    {{/vendorExtensions.x-response-factory-entries}}
+  };
+  {{/vendorExtensions.x-has-response-factories}}
 
   @override
   RequestSchema get payload =>

@@ -346,6 +346,97 @@ public class DartNetworkClientCodegen extends AbstractDartCodegen {
                     }
                 }
 
+                // --- Per-status-code response factories ---
+                // Process all responses to build the responseFactories map and determine
+                // default success/error response factories.
+                if (op.responses != null && !op.responses.isEmpty()) {
+                    List<Map<String, Object>> responseFactoryEntries = new ArrayList<>();
+                    String defaultSuccessSchemaName = null;
+                    String defaultSuccessFactoryExpr = null;
+                    String defaultErrorSchemaName = null;
+                    String defaultErrorFactoryExpr = null;
+
+                    // Track "default" response separately (not added to the map)
+                    String defaultRespSchemaName = null;
+                    String defaultRespFactoryExpr = null;
+
+                    for (CodegenResponse resp : op.responses) {
+                        String code = resp.code;
+                        if (code == null) continue;
+
+                        // Handle "default" response (also represented as "0" by the generator):
+                        // resolve it but don't add to the status code map
+                        if ("default".equalsIgnoreCase(code) || "0".equals(code)) {
+                            Map<String, Object> resolved = resolveResponseSchemaInfo(resp, op, opIdPascal, uniqueModelImports);
+                            defaultRespSchemaName = (String) resolved.get("schemaName");
+                            defaultRespFactoryExpr = (String) resolved.get("factoryExpr");
+                            continue;
+                        }
+
+                        // Skip wildcard responses (e.g., "2XX", "4XX")
+                        if (!code.matches("\\d+")) continue;
+
+                        Map<String, Object> resolved = resolveResponseSchemaInfo(resp, op, opIdPascal, uniqueModelImports);
+                        String schemaName = (String) resolved.get("schemaName");
+                        String factoryExpr = (String) resolved.get("factoryExpr");
+
+                        Map<String, Object> entry = new LinkedHashMap<>();
+                        entry.put("statusCode", code);
+                        entry.put("schemaName", schemaName);
+                        entry.put("factoryExpr", factoryExpr);
+                        responseFactoryEntries.add(entry);
+
+                        // Determine defaults: first 2xx as success, first 4xx/5xx as error
+                        if (resp.is2xx && defaultSuccessSchemaName == null) {
+                            defaultSuccessSchemaName = schemaName;
+                            defaultSuccessFactoryExpr = factoryExpr;
+                        }
+                        if ((resp.is4xx || resp.is5xx) && defaultErrorSchemaName == null) {
+                            defaultErrorSchemaName = schemaName;
+                            defaultErrorFactoryExpr = factoryExpr;
+                        }
+                    }
+
+                    // If "default" response exists, use it as error factory (if no explicit error found)
+                    // and as success factory (if no explicit success found)
+                    if (defaultRespFactoryExpr != null) {
+                        if (defaultErrorSchemaName == null) {
+                            defaultErrorSchemaName = defaultRespSchemaName;
+                            defaultErrorFactoryExpr = defaultRespFactoryExpr;
+                        }
+                        if (defaultSuccessSchemaName == null) {
+                            defaultSuccessSchemaName = defaultRespSchemaName;
+                            defaultSuccessFactoryExpr = defaultRespFactoryExpr;
+                        }
+                    }
+
+                    // Override default response factory if we found a success response
+                    if (defaultSuccessFactoryExpr != null) {
+                        op.vendorExtensions.put("x-default-response-factory-expr", defaultSuccessFactoryExpr);
+                        op.vendorExtensions.put("x-default-response-schema-name", defaultSuccessSchemaName);
+                    }
+
+                    // Override default error response factory if we found an error response
+                    if (defaultErrorFactoryExpr != null) {
+                        op.vendorExtensions.put("x-has-error-response", true);
+                        op.vendorExtensions.put("x-default-error-factory-expr", defaultErrorFactoryExpr);
+                        op.vendorExtensions.put("x-default-error-schema-name", defaultErrorSchemaName);
+                    } else {
+                        op.vendorExtensions.put("x-has-error-response", false);
+                    }
+
+                    // Always emit responseFactories map
+                    if (!responseFactoryEntries.isEmpty()) {
+                        op.vendorExtensions.put("x-has-response-factories", true);
+                        op.vendorExtensions.put("x-response-factory-entries", responseFactoryEntries);
+                    } else {
+                        op.vendorExtensions.put("x-has-response-factories", false);
+                    }
+                } else {
+                    op.vendorExtensions.put("x-has-error-response", false);
+                    op.vendorExtensions.put("x-has-response-factories", false);
+                }
+
                 // Determine HTTP method enum value
                 String methodLower = op.httpMethod.toLowerCase(Locale.ROOT);
                 op.vendorExtensions.put("x-http-method-enum", methodLower);
@@ -450,6 +541,66 @@ public class DartNetworkClientCodegen extends AbstractDartCodegen {
             server.addExtension("x-dart-server-var-name", finalVarName);
             server.addExtension("x-dart-server-index", i);
         }
+    }
+
+    /**
+     * Resolves a CodegenResponse to its Dart schema name and factory expression.
+     * Also adds necessary imports to uniqueModelImports.
+     *
+     * @return map with keys "schemaName" and "factoryExpr"
+     */
+    private Map<String, Object> resolveResponseSchemaInfo(
+            CodegenResponse resp, CodegenOperation ignored, String opIdPascal,
+            Set<String> uniqueModelImports) {
+        Map<String, Object> result = new LinkedHashMap<>();
+
+        String dataType = resp.dataType;
+
+        if (dataType == null || dataType.isEmpty() || resp.isVoid) {
+            // No body / void response — use IgnoredSchema
+            result.put("schemaName", "IgnoredSchema");
+            result.put("factoryExpr", "IgnoredSchema.factory");
+            return result;
+        }
+
+        if ("MultipartFileSchema".equals(dataType) || resp.isBinary || resp.isFile) {
+            // Binary response
+            result.put("schemaName", "BinarySchema");
+            result.put("factoryExpr", "InMemoryBinarySchema.factory");
+            return result;
+        }
+
+        if (dataType.startsWith("List<")) {
+            String innerType = dataType.substring(5, dataType.length() - 1);
+            if (isDartBuiltinType(innerType)) {
+                result.put("schemaName", "AnyDataSchema");
+                result.put("factoryExpr", "AnyDataSchema.factory");
+            } else {
+                // For list returns of model types, we use AnyDataSchema in the map
+                // since each status code maps to SchemaFactory (untyped) in responseFactories.
+                // The wrapper schema is only generated for the default response.
+                String innerFile = toSnakeCaseFilename(innerType);
+                uniqueModelImports.add(innerFile);
+                // Use the operation-level list response schema if it exists, otherwise AnyDataSchema
+                String listSchemaName = opIdPascal + "ResponseSchema";
+                result.put("schemaName", listSchemaName);
+                result.put("factoryExpr", listSchemaName + ".factory");
+            }
+            return result;
+        }
+
+        if (isDartBuiltinType(dataType)) {
+            result.put("schemaName", "AnyDataSchema");
+            result.put("factoryExpr", "AnyDataSchema.factory");
+            return result;
+        }
+
+        // Model type — add import and use its factory
+        String retFile = toSnakeCaseFilename(dataType);
+        uniqueModelImports.add(retFile);
+        result.put("schemaName", dataType);
+        result.put("factoryExpr", dataType + ".factory");
+        return result;
     }
 
     /**
