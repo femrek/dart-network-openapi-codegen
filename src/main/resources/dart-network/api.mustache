@@ -120,7 +120,7 @@ class {{{vendorExtensions.x-operation-id-pascal}}}Command extends {{x-dart-base-
   {{#vendorExtensions.x-is-binary-response}}
     this.binaryResponseType = const InMemoryBinaryResponse(),
   {{/vendorExtensions.x-is-binary-response}}
-  }{{/hasParams}}{{^hasParams}}{{#vendorExtensions.x-is-binary-response}}({BinaryResponseType this._binaryResponseType = const InMemoryBinaryResponse()}){{/vendorExtensions.x-is-binary-response}}{{/hasParams}}){{#vendorExtensions.x-has-json-body}} : _payload = {{{vendorExtensions.x-operation-id-pascal}}}RequestSchema(data: {{{bodyParam.paramName}}}){{/vendorExtensions.x-has-json-body}}{{#vendorExtensions.x-is-multipart}} : _payload = {{{vendorExtensions.x-operation-id-pascal}}}RequestSchema(
+  }{{/hasParams}}{{^hasParams}}{{#vendorExtensions.x-is-binary-response}}{this.binaryResponseType = const InMemoryBinaryResponse()}{{/vendorExtensions.x-is-binary-response}}{{/hasParams}}){{#vendorExtensions.x-has-json-body}} : _payload = {{{vendorExtensions.x-operation-id-pascal}}}RequestSchema(data: {{{bodyParam.paramName}}}){{/vendorExtensions.x-has-json-body}}{{#vendorExtensions.x-is-multipart}} : _payload = {{{vendorExtensions.x-operation-id-pascal}}}RequestSchema(
         {{#formParams}}
           {{{paramName}}}: {{{paramName}}},
         {{/formParams}}
