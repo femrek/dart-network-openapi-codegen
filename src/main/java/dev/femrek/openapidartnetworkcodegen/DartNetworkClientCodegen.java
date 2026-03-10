@@ -391,23 +391,17 @@ public class DartNetworkClientCodegen extends AbstractDartCodegen {
                             defaultSuccessSchemaName = schemaName;
                             defaultSuccessFactoryExpr = factoryExpr;
                         }
-                        if ((resp.is4xx || resp.is5xx) && defaultErrorSchemaName == null) {
-                            defaultErrorSchemaName = schemaName;
-                            defaultErrorFactoryExpr = factoryExpr;
-                        }
                     }
 
                     // If "default" response exists, use it as error factory (if no explicit error found)
                     // and as success factory (if no explicit success found)
                     if (defaultRespFactoryExpr != null) {
-                        if (defaultErrorSchemaName == null) {
-                            defaultErrorSchemaName = defaultRespSchemaName;
-                            defaultErrorFactoryExpr = defaultRespFactoryExpr;
-                        }
                         if (defaultSuccessSchemaName == null) {
                             defaultSuccessSchemaName = defaultRespSchemaName;
                             defaultSuccessFactoryExpr = defaultRespFactoryExpr;
                         }
+                        defaultErrorSchemaName = defaultRespSchemaName;
+                        defaultErrorFactoryExpr = defaultRespFactoryExpr;
                     }
 
                     // Override default response factory if we found a success response

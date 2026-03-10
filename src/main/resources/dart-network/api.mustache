@@ -214,7 +214,7 @@ class {{{vendorExtensions.x-operation-id-pascal}}}Command extends {{x-dart-base-
   SchemaFactory get defaultErrorResponseFactory => {{{vendorExtensions.x-default-error-factory-expr}}};
   {{/vendorExtensions.x-has-error-response}}
   {{^vendorExtensions.x-has-error-response}}
-  SchemaFactory get defaultErrorResponseFactory => IgnoredSchema.factory;
+  SchemaFactory get defaultErrorResponseFactory => AnyDataSchema.factory;
   {{/vendorExtensions.x-has-error-response}}
 
   {{#vendorExtensions.x-has-response-factories}}
