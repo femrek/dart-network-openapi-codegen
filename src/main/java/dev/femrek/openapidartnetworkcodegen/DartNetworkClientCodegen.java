@@ -560,7 +560,7 @@ public class DartNetworkClientCodegen extends AbstractDartCodegen {
         if ("MultipartFileSchema".equals(dataType) || resp.isBinary || resp.isFile) {
             // Binary response
             result.put("schemaName", "BinarySchema");
-            result.put("factoryExpr", "InMemoryBinarySchema.factory");
+            result.put("factoryExpr", "BinarySchemaFactory(binaryResponseType: binaryResponseType)");
             return result;
         }
 

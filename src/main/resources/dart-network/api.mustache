@@ -202,7 +202,7 @@ class {{{vendorExtensions.x-operation-id-pascal}}}Command extends {{x-dart-base-
   {{/vendorExtensions.x-default-response-factory-expr}}
   {{^vendorExtensions.x-default-response-factory-expr}}
   {{#vendorExtensions.x-is-binary-response}}
-  SchemaFactory<{{{vendorExtensions.x-return-schema-name}}}> get defaultResponseFactory => InMemoryBinarySchema.factory;
+  SchemaFactory<{{{vendorExtensions.x-return-schema-name}}}> get defaultResponseFactory => BinarySchemaFactory(binaryResponseType: binaryResponseType);
   {{/vendorExtensions.x-is-binary-response}}
   {{^vendorExtensions.x-is-binary-response}}
   SchemaFactory<{{{vendorExtensions.x-return-schema-name}}}> get defaultResponseFactory => {{{vendorExtensions.x-return-schema-name}}}.factory;
