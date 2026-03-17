@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 
 import static org.apache.commons.io.FileUtils.deleteDirectory;
 
@@ -18,7 +19,7 @@ import static org.apache.commons.io.FileUtils.deleteDirectory;
 public class GenerateExample {
     private static final Logger LOGGER = LoggerFactory.getLogger(GenerateExample.class);
 
-    static void main(String[] ignored) {
+    public static void main(String[] ignored) {
         System.out.println("=== Generating Dart Clients from OpenAPI Spec ===\n");
 
         // Get the current directory
@@ -26,7 +27,7 @@ public class GenerateExample {
         String baseOutputDir = projectDir + "/generated-output";
         String specDir = projectDir + "/spec_samples";
         File[] specFiles = new File(specDir)
-                .listFiles((_, name) -> name.endsWith(".yaml") || name.endsWith(".json"));
+                .listFiles((ignored_, name) -> name.endsWith(".yaml") || name.endsWith(".json"));
 
         System.out.println("Input Specs: " + (specFiles != null ? specFiles.length : 0) + " found in " + specDir);
         System.out.println("Base Output Directory: " + baseOutputDir);
@@ -64,7 +65,7 @@ public class GenerateExample {
 
         // Define the generators to use
         GeneratorConfig[] generatorConfigs = {
-                new GeneratorConfig("dart",         "Standard Dart Client",          "dart-client"),
+                new GeneratorConfig("dart", "Standard Dart Client", "dart-client"),
                 new GeneratorConfig("dart-dio",     "Dart Dio Client",               "dart-dio-client"),
                 new GeneratorConfig("dart-network", "Dart Network Client (Custom)", "dart-network-client"),
         };
@@ -177,7 +178,52 @@ public class GenerateExample {
         }
     }
 
-    private record GeneratorConfig(String generatorName, String description, String folderName) {
-    }
+    private static final class GeneratorConfig {
+        private final String generatorName;
+        private final String description;
+        private final String folderName;
+
+        private GeneratorConfig(String generatorName, String description, String folderName) {
+            this.generatorName = generatorName;
+            this.description = description;
+            this.folderName = folderName;
+        }
+
+        public String generatorName() {
+            return generatorName;
+        }
+
+        public String description() {
+            return description;
+        }
+
+        public String folderName() {
+            return folderName;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == this) return true;
+            if (obj == null || obj.getClass() != this.getClass()) return false;
+            var that = (GeneratorConfig) obj;
+            return Objects.equals(this.generatorName, that.generatorName) &&
+                    Objects.equals(this.description, that.description) &&
+                    Objects.equals(this.folderName, that.folderName);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(generatorName, description, folderName);
+        }
+
+        @Override
+        public String toString() {
+            return "GeneratorConfig[" +
+                    "generatorName=" + generatorName + ", " +
+                    "description=" + description + ", " +
+                    "folderName=" + folderName + ']';
+        }
+
+        }
 }
 

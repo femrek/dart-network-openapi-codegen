@@ -468,7 +468,7 @@ public class DartNetworkClientCodegen extends AbstractDartCodegen {
 
                 // Tag name for folder organization
                 if (op.tags != null && !op.tags.isEmpty()) {
-                    String tagName = StringUtils.underscore(op.tags.getFirst().getName());
+                    String tagName = StringUtils.underscore(op.tags.get(0).getName());
                     op.vendorExtensions.put("x-tag-folder", tagName);
                 }
             }
