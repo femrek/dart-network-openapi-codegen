@@ -22,11 +22,17 @@ generate: download-openapi-cli-if-not-exists compile
 ifndef SPEC_NAME
 	$(error SPEC_NAME is required. Usage: make generate SPEC_NAME=petstore.json)
 endif
+ifdef USE_CONF
+	$(eval CONFIG_FLAG := -c ./example-generator-config.yaml)
+else
+	$(eval CONFIG_FLAG :=)
+endif
 	$(eval OUTPUT_DIR := ./generated-output/$(basename $(SPEC_NAME))/dart-network-client)
 	rm -rf $(OUTPUT_DIR)
 	java -cp $(OPENAPI_CODEGEN_JAR):$(CUSTOM_CODEGEN_JAR) org.openapitools.codegen.OpenAPIGenerator generate \
 	   -i $(SPEC_DIR)/$(SPEC_NAME) \
 	   -g $(GENERATOR) \
+	   $(CONFIG_FLAG) \
 	   -o $(OUTPUT_DIR)
 
 pubget:

@@ -21,6 +21,9 @@ public class DartNetworkClientCodegen extends AbstractDartCodegen {
 
     public static final String SERIALIZATION_LIBRARY_NATIVE = "native_serialization";
 
+    public static final String DART_NETWORK_LAYER_VERSION = "dartNetworkLayerVersion";
+    public static final String DART_NETWORK_LAYER_VERSION_DEFAULT = "^1.0.0-dev.10";
+
     private static final Set<String> DART_PRIMITIVES = Set.of(
             "String", "int", "double", "bool", "num", "DateTime", "Object", "dynamic"
     );
@@ -44,12 +47,17 @@ public class DartNetworkClientCodegen extends AbstractDartCodegen {
                 "Specify serialization library");
         serializationLibrary.setDefault(SERIALIZATION_LIBRARY_NATIVE);
 
+        final CliOption dartNetworkLayerVersion = CliOption.newString(DART_NETWORK_LAYER_VERSION,
+                "Specify the version of dart_network_layer_core to use in pubspec.yaml");
+        dartNetworkLayerVersion.setDefault(DART_NETWORK_LAYER_VERSION_DEFAULT);
+
         embeddedTemplateDir = templateDir = "dart-network";
 
         final Map<String, String> serializationOptions = new HashMap<>();
         serializationOptions.put(SERIALIZATION_LIBRARY_NATIVE, "Use native serializer, backwards compatible");
         serializationLibrary.setEnum(serializationOptions);
         cliOptions.add(serializationLibrary);
+        cliOptions.add(dartNetworkLayerVersion);
 
         sourceFolder = "";
 
@@ -71,6 +79,11 @@ public class DartNetworkClientCodegen extends AbstractDartCodegen {
     @Override
     public void processOpts() {
         super.processOpts();
+
+        if (additionalProperties.get(DART_NETWORK_LAYER_VERSION) == null) {
+            additionalProperties.put(DART_NETWORK_LAYER_VERSION, DART_NETWORK_LAYER_VERSION_DEFAULT);
+            LOGGER.debug("dartNetworkLayerVersion not set, using default {}", DART_NETWORK_LAYER_VERSION_DEFAULT);
+        }
 
         // handle library not being set
         if (additionalProperties.get(CodegenConstants.SERIALIZATION_LIBRARY) == null) {
