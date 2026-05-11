@@ -472,6 +472,13 @@ public class DartNetworkClientCodegen extends AbstractDartCodegen {
 
                 // Check if operation has query params
                 op.vendorExtensions.put("x-has-query-params", op.queryParams != null && !op.queryParams.isEmpty());
+                if (op.queryParams != null) {
+                    for (CodegenParameter param : op.queryParams) {
+                        if (param.isMap || (param.dataType != null && param.dataType.startsWith("Map<"))) {
+                            param.vendorExtensions.put("x-is-map-query-param", true);
+                        }
+                    }
+                }
 
                 // Check if operation has header params
                 op.vendorExtensions.put("x-has-header-params", op.headerParams != null && !op.headerParams.isEmpty());

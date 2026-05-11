@@ -182,12 +182,22 @@ class {{{vendorExtensions.x-operation-id-pascal}}}Command extends {{x-dart-base-
     {{/required}}
     {{/vendorExtensions.x-is-inline-enum}}
     {{^vendorExtensions.x-is-inline-enum}}
+    {{#vendorExtensions.x-is-map-query-param}}
+    {{#required}}
+    ...{{{paramName}}}.entries.map((e) => QueryParameter(key: e.key, value: e.value.toString())),
+    {{/required}}
+    {{^required}}
+    if ({{{paramName}}} != null) ...{{{paramName}}}!.entries.map((e) => QueryParameter(key: e.key, value: e.value.toString())),
+    {{/required}}
+    {{/vendorExtensions.x-is-map-query-param}}
+    {{^vendorExtensions.x-is-map-query-param}}
     {{#required}}
     QueryParameter(key: r'{{{baseName}}}', value: {{{paramName}}}),
     {{/required}}
     {{^required}}
     if ({{{paramName}}} != null) QueryParameter(key: r'{{{baseName}}}', value: {{{paramName}}}),
     {{/required}}
+    {{/vendorExtensions.x-is-map-query-param}}
     {{/vendorExtensions.x-is-inline-enum}}
     {{/queryParams}}
   ];
