@@ -1,3 +1,12 @@
+## 0.1.17 - 2026-05-13
+
+
+
+### 🚀 Features
+
+- Feat: add analysis_options.mustache to exclude generated lib directory from static analysis
+
+
 ## 0.1.16 - 2026-05-13
 
 
