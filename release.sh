@@ -34,8 +34,25 @@ else
   echo "⚠️ $MAKEFILE not found; skipping makefile update"
 fi
 
+# Update changelog
+if command -v git-cliff >/dev/null 2>&1; then
+  echo "📝 Updating CHANGELOG.md..."
+  if [ -f "CHANGELOG.md" ]; then
+    git cliff --unreleased --tag "$VERSION" --prepend CHANGELOG.md
+  else
+    git cliff --unreleased --tag "$VERSION" -o CHANGELOG.md
+  fi
+  echo "✅ Updated CHANGELOG.md"
+else
+  echo "⚠️ git-cliff not found; skipping changelog generation"
+fi
+
 # Commit
-git add "$POM" "$MAKEFILE"
+if [ -f "CHANGELOG.md" ]; then
+  git add "$POM" "$MAKEFILE" CHANGELOG.md
+else
+  git add "$POM" "$MAKEFILE"
+fi
 git commit -m "chore(version): $VERSION"
 
 echo "✅ Created commit 'chore(version): $VERSION'"

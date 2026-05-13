@@ -30,6 +30,12 @@ jobs:
         id: jar
         run: echo "path=$(ls target/*.jar | head -n 1)" >> $GITHUB_OUTPUT
 
+      - name: Extract Release Notes
+        id: extract_notes
+        run: |
+          # Extracts the latest release block from CHANGELOG.md (from the first '## ' up to the next '## ')
+          awk '/^## /{ if (p) { exit }; p=1; next } p{ print }' CHANGELOG.md > release_notes.md
+
       - name: Create draft release
         uses: softprops/action-gh-release@v3
         with:
@@ -37,6 +43,7 @@ jobs:
           name: Release ${{ github.ref_name }}
           tag_name: ${{ github.ref_name }}
           files: ${{ steps.jar.outputs.path }}
+          body_path: release_notes.md
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
