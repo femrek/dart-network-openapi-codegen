@@ -20,6 +20,8 @@ public class DartNetworkClientCodegen extends AbstractDartCodegen {
     private final Logger LOGGER = LoggerFactory.getLogger(DartNetworkClientCodegen.class);
 
     public static final String SERIALIZATION_LIBRARY_NATIVE = "native_serialization";
+    public static final String SERIALIZATION_LIBRARY_JSON_SERIALIZABLE = "json_serializable";
+    public static final String SERIALIZATION_LIBRARY_BUILT_VALUE = "built_value";
 
     public static final String DART_NETWORK_LAYER_VERSION = "dartNetworkLayerVersion";
     public static final String DART_NETWORK_LAYER_VERSION_DEFAULT = "^1.0.0-dev.10";
@@ -55,6 +57,8 @@ public class DartNetworkClientCodegen extends AbstractDartCodegen {
 
         final Map<String, String> serializationOptions = new HashMap<>();
         serializationOptions.put(SERIALIZATION_LIBRARY_NATIVE, "Use native serializer, backwards compatible");
+        serializationOptions.put(SERIALIZATION_LIBRARY_JSON_SERIALIZABLE, "Use json_serializable for serialization");
+        serializationOptions.put(SERIALIZATION_LIBRARY_BUILT_VALUE, "Use built_value for serialization");
         serializationLibrary.setEnum(serializationOptions);
         cliOptions.add(serializationLibrary);
         cliOptions.add(dartNetworkLayerVersion);
@@ -526,8 +530,9 @@ public class DartNetworkClientCodegen extends AbstractDartCodegen {
         final String serialization_library = getLibrary();
         LOGGER.info("Using serialization library {}", serialization_library);
 
-        // fall through to default backwards compatible generator
-        additionalProperties.put(SERIALIZATION_LIBRARY_NATIVE, "true");
+        // Put the currently selected library as a boolean in additionalProperties
+        // so that mustache templates can use it like {{#json_serializable}} ... {{/json_serializable}}
+        additionalProperties.put(serialization_library, "true");
     }
 
     @Override

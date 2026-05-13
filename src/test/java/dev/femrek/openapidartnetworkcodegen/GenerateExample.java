@@ -65,8 +65,8 @@ public class GenerateExample {
 
         // Define the generators to use
         GeneratorConfig[] generatorConfigs = {
-                new GeneratorConfig("dart", "Standard Dart Client", "dart-client"),
-                new GeneratorConfig("dart-dio",     "Dart Dio Client",               "dart-dio-client"),
+//                new GeneratorConfig("dart", "Standard Dart Client", "dart-client"),
+//                new GeneratorConfig("dart-dio",     "Dart Dio Client",               "dart-dio-client"),
                 new GeneratorConfig("dart-network", "Dart Network Client (Custom)", "dart-network-client"),
         };
 
@@ -150,6 +150,10 @@ public class GenerateExample {
         configurator.addAdditionalProperty("pubName", pubName);
         configurator.addAdditionalProperty("pubVersion", "1.0.0");
         configurator.addAdditionalProperty("pubDescription", "API Client for " + specBaseName + " generated with " + generatorName);
+
+        // This sets the serialization library (e.g., json_serializable or built_value)
+//        configurator.addAdditionalProperty("serializationLibrary", "json_serializable");
+        configurator.addAdditionalProperty("serializationLibrary", "built_value");
 
         return configurator;
     }
