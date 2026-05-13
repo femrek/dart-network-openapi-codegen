@@ -36,10 +36,10 @@ jobs:
           # Extracts the latest release block from CHANGELOG.md (from the first '## ' up to the next '## ')
           awk '/^## /{ if (p) { exit }; p=1; next } p{ print }' CHANGELOG.md > release_notes.md
 
-      - name: Create draft release
+      - name: Create GitHub Release
         uses: softprops/action-gh-release@v3
         with:
-          draft: true
+          draft: false
           name: Release ${{ github.ref_name }}
           tag_name: ${{ github.ref_name }}
           files: ${{ steps.jar.outputs.path }}
