@@ -195,6 +195,15 @@ public class DartNetworkClientCodegen extends AbstractDartCodegen {
             }
             model.imports.clear();
             model.imports.addAll(newImports);
+            
+            for (org.openapitools.codegen.CodegenProperty param : model.vars) {
+                if (param.isMap && param.items != null && param.items.isArray) {
+                    if (param.items.datatypeWithEnum != null && !param.items.datatypeWithEnum.startsWith("List<")) {
+                        param.items.datatypeWithEnum = "List<" + param.items.datatypeWithEnum + ">";
+                        param.datatypeWithEnum = "Map<String, " + param.items.datatypeWithEnum + ">";
+                    }
+                }
+            }
         }
 
         return objs;
