@@ -16,5 +16,20 @@ environment:
   sdk: '>=3.6.0 <4.0.0'
 dependencies:
   dart_network_layer_core: '{{{dartNetworkLayerVersion}}}'
+  {{#json_serializable}}
+  json_annotation: ^4.9.0
+  {{/json_serializable}}
+  {{#built_value}}
+  built_value: ^8.9.0
+  built_collection: ^5.1.1
+  {{/built_value}}
 dev_dependencies:
   test: '>=1.21.6 <2.0.0'
+  {{#json_serializable}}
+  build_runner: ^2.4.0
+  json_serializable: ^6.9.0
+  {{/json_serializable}}
+  {{#built_value}}
+  build_runner: ^2.4.0
+  built_value_generator: ^8.9.0
+  {{/built_value}}

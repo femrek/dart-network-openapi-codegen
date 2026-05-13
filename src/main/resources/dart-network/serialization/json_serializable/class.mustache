@@ -1,154 +1,70 @@
-{{^skipCopyWith}}
-import 'package:copy_with_extension/copy_with_extension.dart';
-{{/skipCopyWith}}
-import 'package:json_annotation/json_annotation.dart';
-{{#useEquatable}}
-import 'package:equatable/src/equatable_utils.dart';
-{{/useEquatable}}
-{{#useOptional}}
-import 'package:{{pubName}}/src/optional.dart';
-{{/useOptional}}
-
-part '{{classFilename}}.g.dart';
-
-{{!
-    Classes with polymorphism or composition may generate unused imports,
-    these need to be ignored for said classes so that there are no lint errors.
-}}
 {{#parentModel}}
 // ignore_for_file: unused_import
 
 {{/parentModel}}
 
+{{! Note: Imports should be managed in model.mustache }}
+
 {{#isDeprecated}}
 @Deprecated('{{{classname}}} has been deprecated')
 {{/isDeprecated}}
-{{^skipCopyWith}}
-@CopyWith()
-{{/skipCopyWith}}
 @JsonSerializable(
   checked: true,
   createToJson: true,
   disallowUnrecognizedKeys: false,
   explicitToJson: true,
 )
-class {{{classname}}} {
-{{>serialization/json_serializable/dart_constructor}}
-
+class {{{classname}}} extends Schema {
+{{>dart_constructor}}
 
 {{#vars}}
   {{#description}}
-      /// {{{description}}}
+  /// {{{.}}}
   {{/description}}
-  {{^isEnum}}
-      {{#minimum}}
-          // minimum: {{{minimum}}}
-      {{/minimum}}
-      {{#maximum}}
-          // maximum: {{{maximum}}}
-      {{/maximum}}
-  {{/isEnum}}
-  {{#deprecated}}
-  @Deprecated('{{{name}}} has been deprecated')
-  {{/deprecated}}
-  {{^isBinary}}
-{{^required}}{{#useOptional}}  @OptionalConverter()
-{{/useOptional}}{{/required}}  @JsonKey(
-    {{#defaultValue}}defaultValue: {{{defaultValue}}},{{/defaultValue}}
-    name: r'{{{baseName}}}',
-    required: {{#required}}true{{/required}}{{^required}}false{{/required}},
-    includeIfNull: {{#required}}{{#isNullable}}true{{/isNullable}}{{^isNullable}}false{{/isNullable}}{{/required}}{{^required}}false{{/required}},{{^required}}{{#useOptional}}
-    readValue: readOptionalValue,{{/useOptional}}{{/required}}
-  {{#isEnumOrRef}}
-  {{#enumUnknownDefaultCase}}
-  unknownEnumValue: {{{datatypeWithEnum}}}.unknownDefaultOpenApi,
-  {{/enumUnknownDefaultCase}}
-  {{/isEnumOrRef}}
-  )
-  {{/isBinary}}
-  {{#isBinary}}
-  @JsonKey(ignore: true)
-  {{/isBinary}}
-
-
-  {{#required}}
-  {{#finalProperties}}final {{/finalProperties}}{{{datatypeWithEnum}}}{{#isNullable}}?{{/isNullable}} {{{name}}};
-  {{/required}}
-  {{^required}}
-  {{#finalProperties}}final {{/finalProperties}}{{{datatypeWithEnum}}}{{^useOptional}}?{{/useOptional}} {{{name}}};
-  {{/required}}
-
-
+  @JsonKey(name: r'{{{baseName}}}')
+  final {{{datatypeWithEnum}}}{{#isNullable}}?{{/isNullable}}{{^isNullable}}{{^required}}{{^defaultValue}}?{{/defaultValue}}{{/required}}{{/isNullable}} {{{name}}};
 
 {{/vars}}
-
-  {{#useEquatable}}
-    bool operator ==(Object other) {
-      return identical(this, other) ||
-      other is {{{classname}}} &&
-      runtimeType == other.runtimeType &&
-      equals(
-        [
-          {{#vars}}
-            {{{name}}},
-          {{/vars}}
-        ],
-        [
-          {{#vars}}
-            other.{{{name}}},
-          {{/vars}}
-        ]
-      );
-    }
-  {{/useEquatable}}
-
-  {{^useEquatable}}
-    @override
-    bool operator ==(Object other) => identical(this, other) || other is {{{classname}}} &&
-    {{#vars}}
-      other.{{{name}}} == {{{name}}}{{^-last}} &&{{/-last}}{{#-last}};{{/-last}}
-    {{/vars}}
-  {{/useEquatable}}
-
-  {{#useEquatable}}
-    @override
-    int get hashCode => runtimeType.hashCode ^ mapPropsToHashCode([
-    {{#vars}}
-        {{{name}}},
-    {{/vars}}
-    ],);
-  {{/useEquatable}}
-  {{^useEquatable}}
-    @override
-    int get hashCode =>
-    {{#vars}}
-        {{#isNullable}}({{{name}}} == null ? 0 : {{{name}}}.hashCode){{/isNullable}}{{^isNullable}}{{{name}}}.hashCode{{/isNullable}}{{^-last}} +{{/-last}}{{#-last}};{{/-last}}
-    {{/vars}}
-  {{/useEquatable}}
+  /// The factory instance for creating [{{{classname}}}] from JSON.
+  static const factory = {{{classname}}}Factory();
 
   factory {{{classname}}}.fromJson(Map<String, dynamic> json) => _${{{classname}}}FromJson(json);
 
   Map<String, dynamic> toJson() => _${{{classname}}}ToJson(this);
 
-  @override
-  String toString() {
-    return toJson().toString();
+  static List<{{{classname}}}> listFromJson(dynamic json, {bool growable = false,}) {
+    final result = <{{{classname}}}>[];
+    if (json is List && json.isNotEmpty) {
+      for (final row in json) {
+        final value = {{{classname}}}.fromJson(row as Map<String, dynamic>);
+        if (value != null) {
+          result.add(value);
+        }
+      }
+    }
+    return result.toList(growable: growable);
   }
 
+  static Map<String, {{{classname}}}> mapFromJson(dynamic json) {
+    final map = <String, {{{classname}}}>{};
+    if (json is Map && json.isNotEmpty) {
+      json = json.cast<String, dynamic>(); // ignore: parameter_assignments
+      for (final entry in json.entries) {
+        final value = {{{classname}}}.fromJson(entry.value as Map<String, dynamic>);
+        if (value != null) {
+          map[entry.key] = value;
+        }
+      }
+    }
+    return map;
+  }
 }
-{{#vars}}
-    {{#isEnum}}
-        {{^isContainer}}
 
-{{>serialization/json_serializable/enum_inline}}
+class {{{classname}}}Factory extends JsonSchemaFactory<{{{classname}}}> {
+  const {{{classname}}}Factory();
 
-        {{/isContainer}}
-        {{#isContainer}}
-            {{#mostInnerItems}}
+  @override
+  {{{classname}}} fromJson(dynamic json) => {{{classname}}}.fromJson(json as Map<String, dynamic>);
+}
 
-{{>serialization/json_serializable/enum_inline}}
-
-            {{/mostInnerItems}}
-        {{/isContainer}}
-    {{/isEnum}}
-{{/vars}}
+{{>serialization/json_serializable/class_inline_enums}}

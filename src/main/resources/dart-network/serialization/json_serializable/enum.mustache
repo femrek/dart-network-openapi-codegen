@@ -1,26 +1,31 @@
-import 'package:json_annotation/json_annotation.dart';
-
 {{#description}}/// {{{description}}}{{/description}}
 {{#isDeprecated}}
 @Deprecated('{{{classname}}} has been deprecated')
 {{/isDeprecated}}
+@JsonEnum(valueField: 'value')
 enum {{{classname}}} {
-{{#allowableValues}}
-{{#enumVars}}
-  {{^isNull}}
-      {{#description}}
-          /// {{{.}}}
-      {{/description}}
-      @JsonValue({{#isString}}r{{/isString}}{{{value}}})
-      {{{name}}}({{^isString}}'{{/isString}}{{#isString}}r{{/isString}}{{{value}}}{{^isString}}'{{/isString}}){{^-last}},{{/-last}}{{#-last}};{{/-last}}
-  {{/isNull}}
-{{/enumVars}}
-{{/allowableValues}}
+  {{#allowableValues}}
+    {{#enumVars}}
+  @JsonValue({{{value}}})
+  {{{name}}}({{{value}}}){{^-last}},{{/-last}}{{#-last}};{{/-last}}
+    {{/enumVars}}
+  {{/allowableValues}}
 
+  final {{{dataType}}} value;
   const {{{classname}}}(this.value);
 
-  final String value;
+  static const factory = {{{classname}}}Factory();
+
+  factory {{{classname}}}.fromJson({{{dataType}}} value) {
+    return {{{classname}}}.values.firstWhere((e) => e.value == value);
+  }
+
+  {{{dataType}}} toJson() => value;
+}
+
+class {{{classname}}}Factory extends JsonSchemaFactory<{{{classname}}}> {
+  const {{{classname}}}Factory();
 
   @override
-  String toString() => value;
+  {{{classname}}} fromJson(dynamic json) => {{{classname}}}.fromJson(json as {{{dataType}}});
 }

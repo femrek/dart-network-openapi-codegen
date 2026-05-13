@@ -1,36 +1,35 @@
+{{#built_value}}
+{{! already imported inside model:
 import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
+}}
+// part '{{{classFilename}}}.g.dart';
 
-part '{{classFilename}}.g.dart';
+class {{{classname}}} extends EnumClass {
+{{#allowableValues}}
+  {{#enumVars}}
+  @BuiltValueEnumConst(wireName: {{{value}}})
+  static const {{{classname}}} {{{name}}} = _${{{name}}};
+  {{/enumVars}}
+{{/allowableValues}}
 
-{{#isDeprecated}}
-@Deprecated('{{{classname}}} has been deprecated')
-{{/isDeprecated}}
-class {{classname}} extends EnumClass {
+  static const factory = {{{classname}}}Factory();
 
-  {{#allowableValues}}
-    {{#enumVars}}
-      {{#description}}
-  /// {{{.}}}
-      {{/description}}
-  @BuiltValueEnumConst({{#isInteger}}wireNumber: {{{value}}}{{/isInteger}}{{#isLong}}wireNumber: {{{value}}}{{/isLong}}{{^isInteger}}{{^isLong}}wireName: r{{{value}}}{{/isLong}}{{/isInteger}}{{#enumUnknownDefaultCase}}{{#-last}}, fallback: true{{/-last}}{{/enumUnknownDefaultCase}})
-  static const {{classname}} {{name}} = _${{name}};
-    {{/enumVars}}
-  {{/allowableValues}}
+  const {{{classname}}}._(String name) : super(name);
 
-  static Serializer<{{classname}}> get serializer => _${{#lambda.camelcase}}{{{classname}}}{{/lambda.camelcase}}Serializer;
+  static BuiltSet<{{{classname}}}> get values => _${{{classname}}}Values;
+  static {{{classname}}} valueOf(String name) => _${{{classname}}}ValueOf(name);
 
-  const {{classname}}._(String name): super(name);
-
-  static BuiltSet<{{classname}}> get values => _$values;
-  static {{classname}} valueOf(String name) => _$valueOf(name);
+  static Serializer<{{{classname}}}> get serializer => _${{{classname}}}Serializer;
 }
 
-/// Optionally, enum_class can generate a mixin to go with your enum for use
-/// with Angular. It exposes your enum constants as getters. So, if you mix it
-/// in to your Dart component class, the values become available to the
-/// corresponding Angular template.
-///
-/// Trigger mixin generation by writing a line like this one next to your enum.
-abstract class {{classname}}Mixin = Object with _${{classname}}Mixin;
+class {{{classname}}}Factory extends JsonSchemaFactory<{{{classname}}}> {
+  const {{{classname}}}Factory();
+
+  @override
+  {{{classname}}} fromJson(dynamic json) {
+    return standardSerializers.deserializeWith({{{classname}}}.serializer, json) ?? {{{classname}}}.values.first;
+  }
+}
+{{/built_value}}

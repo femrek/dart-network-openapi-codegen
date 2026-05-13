@@ -9,5 +9,5 @@ additionalProperties:
   dartNetworkLayerVersion: "^1.0.0-dev.10"
 
   # You can also specify the serialization library if needed
-  # serializationLibrary: "native_serialization"
+  serializationLibrary: "json_serializable"
 
