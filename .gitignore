@@ -40,6 +40,10 @@ build/
 ### Mac OS ###
 .DS_Store
 
+gen.log
+
 generated-output/
 spec_samples/temp*
 openapi-generator-cli.jar
+
+
