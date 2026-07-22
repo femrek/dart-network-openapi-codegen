@@ -1,3 +1,12 @@
+## 0.1.18 - 2026-07-22
+
+
+
+### 🚀 Features
+
+- Feat: enhance pubspec.mustache with customizable dependency versions and add configuration section to README. and update versions.
+
+
 ## 0.1.17 - 2026-05-13
 
 
