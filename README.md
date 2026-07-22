@@ -90,6 +90,46 @@ dependencies:
     path: ./modules/openapi
 ```
 
+## ⚙️ Configuration
+
+You can customize the generated `pubspec.yaml` dependencies and SDK constraints by providing a `config.yaml` file with `additionalProperties`, or by passing them as command line arguments.
+
+Available properties:
+
+| Property | Description | Default |
+| --- | --- | --- |
+| `serializationLibrary` | The serialization library to use (`native_serialization`, `json_serializable`, `built_value`) | `native_serialization` |
+| `pubName` | Name of the generated pub package | `openapi` |
+| `pubVersion` | Version of the generated pub package | `1.0.0` |
+| `pubDescription` | Description of the generated pub package | - |
+| `pubHomepage` | Homepage of the generated pub package | - |
+| `dartEnvironmentSdk` | Dart SDK constraint | `>=3.6.0 <4.0.0` |
+| `dartNetworkLayerVersion` | Version for `dart_network_layer_core` | `^1.0.0-dev.10` |
+| `jsonAnnotationVersion` | Version for `json_annotation` | `'>=4.9.0 <5.0.0'` |
+| `builtValueVersion` | Version for `built_value` | `'>=8.9.0 <9.0.0'` |
+| `builtCollectionVersion` | Version for `built_collection` | `'>=5.1.1 <6.0.0'` |
+| `testVersion` | Version for `test` | `>=1.21.6 <2.0.0` |
+| `buildRunnerVersion` | Version for `build_runner` | `'>=2.4.0 <3.0.0'` |
+| `jsonSerializableVersion` | Version for `json_serializable` | `'>=6.9.0 <7.0.0'` |
+| `builtValueGeneratorVersion` | Version for `built_value_generator` | `'>=8.9.0 <9.0.0'` |
+
+### Example `config.yaml`
+```yaml
+additionalProperties:
+  dartEnvironmentSdk: ">=3.8.0 <4.0.0"
+  jsonAnnotationVersion: "^4.12.0"
+```
+
+To use it, simply pass `-c config.yaml` to the `java -cp ...` command in your Makefile:
+
+```makefile
+	java -cp $(OPENAPI_CODEGEN_JAR):$(CUSTOM_CODEGEN_JAR) org.openapitools.codegen.OpenAPIGenerator generate \
+	   -i $(SPEC_FILE_NAME) \
+	   -g $(GENERATOR) \
+	   -o $(OUTPUT_DIR) \
+	   -c config.yaml
+```
+
 ## 🔗 Compatible Project
 
 - [dart_network_layer]: This generator is designed to work seamlessly

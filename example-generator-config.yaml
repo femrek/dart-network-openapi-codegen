@@ -6,8 +6,7 @@ pubDescription: "A generated API client using dart_network_layer_core"
 # The additionalProperties section is where custom variables are passed to the codegen
 additionalProperties:
   # Using the newly added parameter
-  dartNetworkLayerVersion: "^1.0.0-dev.10"
+  dartNetworkLayerVersion: "^1.0.0-rc.13"
 
   # You can also specify the serialization library if needed
   serializationLibrary: "json_serializable"
-
