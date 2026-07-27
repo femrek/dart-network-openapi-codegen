@@ -13,8 +13,6 @@ import 'package:built_value/serializer.dart';
 import '{{{.}}}.dart';
 {{/imports}}
 
-{{! Ensure nested enums are self-contained or explicitly imported if part of same file but built_value prefers imports done correctly at module level via index files or explicitly. Since the types are in same file below: }}
-
 {{#json_serializable}}
 part '{{{classFilename}}}.g.dart';
 {{/json_serializable}}
@@ -23,7 +21,6 @@ part '{{{classFilename}}}.g.dart';
 import 'package:built_collection/built_collection.dart';
 part '{{{classFilename}}}.g.dart';
 {{/built_value}}
-
 {{#isEnum}}
 {{#native_serialization}}
 {{>serialization/native/native_enum}}
