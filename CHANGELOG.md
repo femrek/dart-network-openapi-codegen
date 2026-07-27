@@ -1,3 +1,12 @@
+## 0.1.19 - 2026-07-27
+
+
+
+### 🎨 Styling
+
+- Style: remove unnecessary white spaces in schema template.
+
+
 ## 0.1.18 - 2026-07-22
 
 
