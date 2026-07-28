@@ -1,10 +1,3 @@
-{{#parentModel}}
-// ignore_for_file: unused_import
-
-{{/parentModel}}
-
-{{! Note: Imports should be managed in model.mustache }}
-
 {{#isDeprecated}}
 @Deprecated('{{{classname}}} has been deprecated')
 {{/isDeprecated}}
@@ -37,9 +30,7 @@ class {{{classname}}} extends Schema {
     if (json is List && json.isNotEmpty) {
       for (final row in json) {
         final value = {{{classname}}}.fromJson(row as Map<String, dynamic>);
-        if (value != null) {
-          result.add(value);
-        }
+        result.add(value);
       }
     }
     return result.toList(growable: growable);
@@ -51,9 +42,7 @@ class {{{classname}}} extends Schema {
       json = json.cast<String, dynamic>(); // ignore: parameter_assignments
       for (final entry in json.entries) {
         final value = {{{classname}}}.fromJson(entry.value as Map<String, dynamic>);
-        if (value != null) {
-          map[entry.key] = value;
-        }
+        map[entry.key] = value;
       }
     }
     return map;
@@ -66,5 +55,4 @@ class {{{classname}}}Factory extends JsonSchemaFactory<{{{classname}}}> {
   @override
   {{{classname}}} fromJson(dynamic json) => {{{classname}}}.fromJson(json as Map<String, dynamic>);
 }
-
 {{>serialization/json_serializable/class_inline_enums}}

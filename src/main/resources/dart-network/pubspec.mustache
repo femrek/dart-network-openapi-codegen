@@ -13,11 +13,11 @@ repository: {{.}}
 publish_to: {{.}}
 {{/pubPublishTo}}
 environment:
-  sdk: {{^dartEnvironmentSdk}}'>=3.6.0 <4.0.0'{{/dartEnvironmentSdk}}{{#dartEnvironmentSdk}}'{{{dartEnvironmentSdk}}}'{{/dartEnvironmentSdk}}
+  sdk: {{^dartEnvironmentSdk}}'>=3.8.0 <4.0.0'{{/dartEnvironmentSdk}}{{#dartEnvironmentSdk}}'{{{dartEnvironmentSdk}}}'{{/dartEnvironmentSdk}}
 dependencies:
   dart_network_layer_core: '{{{dartNetworkLayerVersion}}}'
   {{#json_serializable}}
-  json_annotation: {{^jsonAnnotationVersion}}'>=4.9.0 <5.0.0'{{/jsonAnnotationVersion}}{{#jsonAnnotationVersion}}{{{jsonAnnotationVersion}}}{{/jsonAnnotationVersion}}
+  json_annotation: {{^jsonAnnotationVersion}}'>=4.12.0 <5.0.0'{{/jsonAnnotationVersion}}{{#jsonAnnotationVersion}}{{{jsonAnnotationVersion}}}{{/jsonAnnotationVersion}}
   {{/json_serializable}}
   {{#built_value}}
   built_value: {{^builtValueVersion}}'>=8.9.0 <9.0.0'{{/builtValueVersion}}{{#builtValueVersion}}{{{builtValueVersion}}}{{/builtValueVersion}}
