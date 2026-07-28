@@ -2,7 +2,7 @@
 
 ![Java](https://img.shields.io/badge/Java-11-orange)
 ![Maven](https://img.shields.io/badge/Maven-Build-blue)
-![Dart](https://img.shields.io/badge/Dart-3.6+-0175C2)
+![Dart](https://img.shields.io/badge/Dart-3.8+-0175C2)
 
 A custom OpenAPI Generator for Dart that produces clean, type-safe API clients powered by
 the [dart_network_layer] library.
@@ -14,14 +14,14 @@ supported by [dart_network_layer] (like [dart_network_layer_dio]) for making API
 ## 🚀 Features
 
 - **Type-Safe Models**: Automatically generates Dart data classes from your OpenAPI schemas.
-- **Modern Dart**: Supports Dart 3.6+ features. And compatible with [dart_network_layer_core].
+- **Modern Dart**: Supports Dart 3.8+ features. And compatible with [dart_network_layer_core].
 
 ## 📦 Prerequisites
 
 Before you begin, ensure you have the following installed:
 
 - **Java 11+**: Required to run the generator.
-- **Dart SDK**: Version 3.6.0 or higher.
+- **Dart SDK**: Version 3.8.0 or higher. (Note: SDK 3.8.0+ is required by default due to `json_serializable` >=6.9.0)
 - **Flutter** (Optional): If you are integrating into a Flutter app.
 
 ## ⚡ Usage
@@ -103,9 +103,9 @@ Available properties:
 | `pubVersion` | Version of the generated pub package | `1.0.0` |
 | `pubDescription` | Description of the generated pub package | - |
 | `pubHomepage` | Homepage of the generated pub package | - |
-| `dartEnvironmentSdk` | Dart SDK constraint | `>=3.6.0 <4.0.0` |
+| `dartEnvironmentSdk` | Dart SDK constraint | `>=3.8.0 <4.0.0` |
 | `dartNetworkLayerVersion` | Version for `dart_network_layer_core` | `^1.0.0-dev.10` |
-| `jsonAnnotationVersion` | Version for `json_annotation` | `'>=4.9.0 <5.0.0'` |
+| `jsonAnnotationVersion` | Version for `json_annotation` | `'>=4.12.0 <5.0.0'` |
 | `builtValueVersion` | Version for `built_value` | `'>=8.9.0 <9.0.0'` |
 | `builtCollectionVersion` | Version for `built_collection` | `'>=5.1.1 <6.0.0'` |
 | `testVersion` | Version for `test` | `>=1.21.6 <2.0.0` |
