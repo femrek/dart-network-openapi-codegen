@@ -33,8 +33,8 @@ Create a `makefile` in your project root with the content below.
 ```makefile
 OPENAPI_CODEGEN_VERSION := 7.20.0
 OPENAPI_CODEGEN_JAR := ./openapi-generator-cli-$(OPENAPI_CODEGEN_VERSION).jar
-CUSTOM_CODEGEN_VERSION := 0.1.10
-CUSTOM_CODEGEN_JAR := ./openapi-dart-network-codegen-$(CUSTOM_CODEGEN_VERSION).jar
+DART_NETWORK_CODEGEN_VERSION := 0.1.21
+DART_NETWORK_CODEGEN_JAR := ./openapi-dart-network-codegen-$(DART_NETWORK_CODEGEN_VERSION).jar
 SPEC_FILE_NAME := ./openapi-spec.json
 SPEC_FILE_URL := https://dummyapi.femrek.dev/v3/api-docs
 GENERATOR := dart-network
@@ -51,9 +51,9 @@ download-openapi-cli-if-not-exists:
 
 download-codegen-if-not-exists:
 	# Check if the custom code generator jar file exists, and download it if it doesn't
-	if [ ! -f $(CUSTOM_CODEGEN_JAR) ]; then \
+	if [ ! -f $(DART_NETWORK_CODEGEN_JAR) ]; then \
 	    echo "Custom code generator not found. Downloading..."; \
-	    curl -fL -o $(CUSTOM_CODEGEN_JAR) https://github.com/femrek/dart-network-openapi-codegen/releases/download/v${CUSTOM_CODEGEN_VERSION}/openapi-dart-network-codegen-${CUSTOM_CODEGEN_VERSION}.jar; \
+	    curl -fL -o $(DART_NETWORK_CODEGEN_JAR) https://github.com/femrek/dart-network-openapi-codegen/releases/download/v${DART_NETWORK_CODEGEN_VERSION}/openapi-dart-network-codegen-${DART_NETWORK_CODEGEN_VERSION}.jar; \
 	else \
 	    echo "OpenAPI Generator CLI already exists."; \
 	fi
@@ -66,7 +66,7 @@ download-openapi-spec:
 generate: download-openapi-cli-if-not-exists download-codegen-if-not-exists download-openapi-spec
 	$(eval OUTPUT_DIR := ./modules/openapi)
 	rm -rf $(OUTPUT_DIR)
-	java -cp $(OPENAPI_CODEGEN_JAR):$(CUSTOM_CODEGEN_JAR) org.openapitools.codegen.OpenAPIGenerator generate \
+	java -cp $(OPENAPI_CODEGEN_JAR):$(DART_NETWORK_CODEGEN_JAR) org.openapitools.codegen.OpenAPIGenerator generate \
 	   -i $(SPEC_FILE_NAME) \
 	   -g $(GENERATOR) \
 	   -o $(OUTPUT_DIR))
@@ -96,34 +96,35 @@ You can customize the generated `pubspec.yaml` dependencies and SDK constraints 
 
 Available properties:
 
-| Property | Description | Default |
-| --- | --- | --- |
-| `serializationLibrary` | The serialization library to use (`native_serialization`, `json_serializable`, `built_value`) | `native_serialization` |
-| `pubName` | Name of the generated pub package | `openapi` |
-| `pubVersion` | Version of the generated pub package | `1.0.0` |
-| `pubDescription` | Description of the generated pub package | - |
-| `pubHomepage` | Homepage of the generated pub package | - |
-| `dartEnvironmentSdk` | Dart SDK constraint | `>=3.8.0 <4.0.0` |
-| `dartNetworkLayerVersion` | Version for `dart_network_layer_core` | `^1.0.0-dev.10` |
-| `jsonAnnotationVersion` | Version for `json_annotation` | `'>=4.12.0 <5.0.0'` |
-| `builtValueVersion` | Version for `built_value` | `'>=8.9.0 <9.0.0'` |
-| `builtCollectionVersion` | Version for `built_collection` | `'>=5.1.1 <6.0.0'` |
-| `testVersion` | Version for `test` | `>=1.21.6 <2.0.0` |
-| `buildRunnerVersion` | Version for `build_runner` | `'>=2.4.0 <3.0.0'` |
-| `jsonSerializableVersion` | Version for `json_serializable` | `'>=6.9.0 <7.0.0'` |
-| `builtValueGeneratorVersion` | Version for `built_value_generator` | `'>=8.9.0 <9.0.0'` |
+| Property                     | Description                                                                                   | Default                |
+|------------------------------|-----------------------------------------------------------------------------------------------|------------------------|
+| `serializationLibrary`       | The serialization library to use (`native_serialization`, `json_serializable`, `built_value`) | `native_serialization` |
+| `pubName`                    | Name of the generated pub package                                                             | `openapi`              |
+| `pubVersion`                 | Version of the generated pub package                                                          | `1.0.0`                |
+| `pubDescription`             | Description of the generated pub package                                                      | -                      |
+| `pubHomepage`                | Homepage of the generated pub package                                                         | -                      |
+| `dartEnvironmentSdk`         | Dart SDK constraint                                                                           | `>=3.8.0 <4.0.0`       |
+| `dartNetworkLayerVersion`    | Version for `dart_network_layer_core`                                                         | `^1.0.0-dev.10`        |
+| `jsonAnnotationVersion`      | Version for `json_annotation`                                                                 | `'>=4.12.0 <5.0.0'`    |
+| `builtValueVersion`          | Version for `built_value`                                                                     | `'>=8.9.0 <9.0.0'`     |
+| `builtCollectionVersion`     | Version for `built_collection`                                                                | `'>=5.1.1 <6.0.0'`     |
+| `testVersion`                | Version for `test`                                                                            | `>=1.21.6 <2.0.0`      |
+| `buildRunnerVersion`         | Version for `build_runner`                                                                    | `'>=2.4.0 <3.0.0'`     |
+| `jsonSerializableVersion`    | Version for `json_serializable`                                                               | `'>=6.9.0 <7.0.0'`     |
+| `builtValueGeneratorVersion` | Version for `built_value_generator`                                                           | `'>=8.9.0 <9.0.0'`     |
 
 ### Example `config.yaml`
 ```yaml
 additionalProperties:
   dartEnvironmentSdk: ">=3.8.0 <4.0.0"
+  serializationLibrary: "json_serializable"
   jsonAnnotationVersion: "^4.12.0"
 ```
 
 To use it, simply pass `-c config.yaml` to the `java -cp ...` command in your Makefile:
 
 ```makefile
-	java -cp $(OPENAPI_CODEGEN_JAR):$(CUSTOM_CODEGEN_JAR) org.openapitools.codegen.OpenAPIGenerator generate \
+	java -cp $(OPENAPI_CODEGEN_JAR):$(DART_NETWORK_CODEGEN_JAR) org.openapitools.codegen.OpenAPIGenerator generate \
 	   -i $(SPEC_FILE_NAME) \
 	   -g $(GENERATOR) \
 	   -o $(OUTPUT_DIR) \
