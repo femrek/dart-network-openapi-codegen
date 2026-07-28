@@ -1,3 +1,12 @@
+## 0.1.21 - 2026-07-28
+
+
+
+### 🎨 Styling
+
+- Style: improve linting and update default dart sdk version to 3.8.0.
+
+
 ## 0.1.20 - 2026-07-27
 
 
