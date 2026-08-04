@@ -43,6 +43,6 @@ pubget:
 
 build_runner:
 	for dir in generated-output/*/*; do \
-	    echo "Running dart run build_runner build --delete-conflicting-outputs in $$dir"; \
-	    cd $$dir && dart run build_runner build --delete-conflicting-outputs; cd -; \
+	    echo "Running dart run build_runner build in $$dir"; \
+	    cd $$dir && dart run build_runner build; cd -; \
 	done
