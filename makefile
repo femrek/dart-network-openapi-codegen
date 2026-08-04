@@ -37,12 +37,12 @@ endif
 
 pubget:
 	for dir in generated-output/*/*; do \
-		echo "Running flutter pub get in $$dir"; \
-		cd $$dir && flutter pub get; cd -; \
+		echo "Running dart pub get in $$dir"; \
+		cd $$dir && dart pub get; cd -; \
 	done
 
 build_runner:
 	for dir in generated-output/*/*; do \
-	    echo "Running flutter pub run build_runner build --delete-conflicting-outputs in $$dir"; \
-	    cd $$dir && flutter pub run build_runner build --delete-conflicting-outputs; cd -; \
+	    echo "Running dart run build_runner build --delete-conflicting-outputs in $$dir"; \
+	    cd $$dir && dart run build_runner build --delete-conflicting-outputs; cd -; \
 	done

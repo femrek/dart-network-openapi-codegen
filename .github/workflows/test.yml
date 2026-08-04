@@ -22,11 +22,8 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          channel: 'stable'
-          cache: true
+      - name: Set up Dart
+        uses: dart-lang/setup-dart@v1
 
       - name: Run code generation and analysis
         run: SPEC_NAME=dummyapi-spec.json USE_CONF=true make generate pubget build_runner && dart analyze generated_output
