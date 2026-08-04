@@ -19,17 +19,9 @@ dependencies:
   {{#json_serializable}}
   json_annotation: {{^jsonAnnotationVersion}}'>=4.12.0 <5.0.0'{{/jsonAnnotationVersion}}{{#jsonAnnotationVersion}}{{{jsonAnnotationVersion}}}{{/jsonAnnotationVersion}}
   {{/json_serializable}}
-  {{#built_value}}
-  built_value: {{^builtValueVersion}}'>=8.9.0 <9.0.0'{{/builtValueVersion}}{{#builtValueVersion}}{{{builtValueVersion}}}{{/builtValueVersion}}
-  built_collection: {{^builtCollectionVersion}}'>=5.1.1 <6.0.0'{{/builtCollectionVersion}}{{#builtCollectionVersion}}{{{builtCollectionVersion}}}{{/builtCollectionVersion}}
-  {{/built_value}}
 dev_dependencies:
   test: {{^testVersion}}'>=1.21.6 <2.0.0'{{/testVersion}}{{#testVersion}}'{{{testVersion}}}'{{/testVersion}}
   {{#json_serializable}}
   build_runner: {{^buildRunnerVersion}}'>=2.4.0 <3.0.0'{{/buildRunnerVersion}}{{#buildRunnerVersion}}{{{buildRunnerVersion}}}{{/buildRunnerVersion}}
   json_serializable: {{^jsonSerializableVersion}}'>=6.9.0 <7.0.0'{{/jsonSerializableVersion}}{{#jsonSerializableVersion}}{{{jsonSerializableVersion}}}{{/jsonSerializableVersion}}
   {{/json_serializable}}
-  {{#built_value}}
-  build_runner: {{^buildRunnerVersion}}'>=2.4.0 <3.0.0'{{/buildRunnerVersion}}{{#buildRunnerVersion}}{{{buildRunnerVersion}}}{{/buildRunnerVersion}}
-  built_value_generator: {{^builtValueGeneratorVersion}}'>=8.9.0 <9.0.0'{{/builtValueGeneratorVersion}}{{#builtValueGeneratorVersion}}{{{builtValueGeneratorVersion}}}{{/builtValueGeneratorVersion}}
-  {{/built_value}}

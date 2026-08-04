@@ -5,10 +5,6 @@
 {{#json_serializable}}
 import 'package:json_annotation/json_annotation.dart';
 {{/json_serializable}}
-{{#built_value}}
-import 'package:built_value/built_value.dart';
-import 'package:built_value/serializer.dart';
-{{/built_value}}
 {{#imports}}
 import '{{{.}}}.dart';
 {{/imports}}
@@ -16,11 +12,6 @@ import '{{{.}}}.dart';
 {{#json_serializable}}
 part '{{{classFilename}}}.g.dart';
 {{/json_serializable}}
-{{#built_value}}
-{{! If built_collection is needed strictly, wait until inside class to declare, otherwise:}}
-import 'package:built_collection/built_collection.dart';
-part '{{{classFilename}}}.g.dart';
-{{/built_value}}
 {{#isEnum}}
 {{#native_serialization}}
 {{>serialization/native/native_enum}}
@@ -28,9 +19,6 @@ part '{{{classFilename}}}.g.dart';
 {{#json_serializable}}
 {{>serialization/json_serializable/enum}}
 {{/json_serializable}}
-{{#built_value}}
-{{>serialization/built_value/enum}}
-{{/built_value}}
 {{/isEnum}}
 {{^isEnum}}
 {{#native_serialization}}
@@ -39,16 +27,10 @@ part '{{{classFilename}}}.g.dart';
 {{#json_serializable}}
 {{>serialization/json_serializable/class}}
 {{/json_serializable}}
-{{#built_value}}
-{{>serialization/built_value/class}}
-{{/built_value}}
 {{/isEnum}}
 {{#hasEnums}}
 {{#vars}}
 {{#isEnum}}
-{{#built_value}}
-{{>serialization/built_value/enum}}
-{{/built_value}}
 {{/isEnum}}
 {{/vars}}
 {{/hasEnums}}
