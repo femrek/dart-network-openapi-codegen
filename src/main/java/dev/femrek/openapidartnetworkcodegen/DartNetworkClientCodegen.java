@@ -21,7 +21,6 @@ public class DartNetworkClientCodegen extends AbstractDartCodegen {
 
     public static final String SERIALIZATION_LIBRARY_NATIVE = "native_serialization";
     public static final String SERIALIZATION_LIBRARY_JSON_SERIALIZABLE = "json_serializable";
-    public static final String SERIALIZATION_LIBRARY_BUILT_VALUE = "built_value";
 
     public static final String DART_NETWORK_LAYER_VERSION = "dartNetworkLayerVersion";
     public static final String DART_NETWORK_LAYER_VERSION_DEFAULT = "^1.0.0";
@@ -58,7 +57,6 @@ public class DartNetworkClientCodegen extends AbstractDartCodegen {
         final Map<String, String> serializationOptions = new HashMap<>();
         serializationOptions.put(SERIALIZATION_LIBRARY_NATIVE, "Use native serializer, backwards compatible");
         serializationOptions.put(SERIALIZATION_LIBRARY_JSON_SERIALIZABLE, "Use json_serializable for serialization");
-        serializationOptions.put(SERIALIZATION_LIBRARY_BUILT_VALUE, "Use built_value for serialization");
         serializationLibrary.setEnum(serializationOptions);
         cliOptions.add(serializationLibrary);
         cliOptions.add(dartNetworkLayerVersion);

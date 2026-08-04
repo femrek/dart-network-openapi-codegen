@@ -61,7 +61,7 @@
 
 ### 🐛 Bug Fixes
 
-- Fix: update serialization support for Dart clients with json_serializable and built_value
+- Fix: update serialization support for Dart clients with json_serializable
 
 
 ## 0.1.13 - 2026-05-13
@@ -70,7 +70,7 @@
 
 ### 🚀 Features
 
-- Feat: enhance serialization options for Dart clients with built_value and json_serializable
+- Feat: enhance serialization options for Dart clients with json_serializable
 
 
 ## 0.1.12 - 2026-05-11

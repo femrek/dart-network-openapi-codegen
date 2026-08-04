@@ -98,7 +98,7 @@ Available properties:
 
 | Property                     | Description                                                                                   | Default                |
 |------------------------------|-----------------------------------------------------------------------------------------------|------------------------|
-| `serializationLibrary`       | The serialization library to use (`native_serialization`, `json_serializable`, `built_value`) | `native_serialization` |
+| `serializationLibrary`       | The serialization library to use (`native_serialization`, `json_serializable`) | `native_serialization` |
 | `pubName`                    | Name of the generated pub package                                                             | `openapi`              |
 | `pubVersion`                 | Version of the generated pub package                                                          | `1.0.0`                |
 | `pubDescription`             | Description of the generated pub package                                                      | -                      |
@@ -106,12 +106,10 @@ Available properties:
 | `dartEnvironmentSdk`         | Dart SDK constraint                                                                           | `>=3.8.0 <4.0.0`       |
 | `dartNetworkLayerVersion`    | Version for `dart_network_layer_core`                                                         | `^1.0.0-dev.10`        |
 | `jsonAnnotationVersion`      | Version for `json_annotation`                                                                 | `'>=4.12.0 <5.0.0'`    |
-| `builtValueVersion`          | Version for `built_value`                                                                     | `'>=8.9.0 <9.0.0'`     |
 | `builtCollectionVersion`     | Version for `built_collection`                                                                | `'>=5.1.1 <6.0.0'`     |
 | `testVersion`                | Version for `test`                                                                            | `>=1.21.6 <2.0.0`      |
 | `buildRunnerVersion`         | Version for `build_runner`                                                                    | `'>=2.4.0 <3.0.0'`     |
 | `jsonSerializableVersion`    | Version for `json_serializable`                                                               | `'>=6.9.0 <7.0.0'`     |
-| `builtValueGeneratorVersion` | Version for `built_value_generator`                                                           | `'>=8.9.0 <9.0.0'`     |
 
 ### Example `config.yaml`
 ```yaml

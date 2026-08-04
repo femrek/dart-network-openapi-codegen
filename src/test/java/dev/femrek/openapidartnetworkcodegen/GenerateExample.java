@@ -151,9 +151,8 @@ public class GenerateExample {
         configurator.addAdditionalProperty("pubVersion", "1.0.0");
         configurator.addAdditionalProperty("pubDescription", "API Client for " + specBaseName + " generated with " + generatorName);
 
-        // This sets the serialization library (e.g., json_serializable or built_value)
+        // This sets the serialization library (e.g., json_serializable)
         configurator.addAdditionalProperty("serializationLibrary", "json_serializable");
-//        configurator.addAdditionalProperty("serializationLibrary", "built_value");
 
         return configurator;
     }
