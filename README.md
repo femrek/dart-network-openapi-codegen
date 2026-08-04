@@ -104,7 +104,7 @@ Available properties:
 | `pubDescription`             | Description of the generated pub package                                                      | -                      |
 | `pubHomepage`                | Homepage of the generated pub package                                                         | -                      |
 | `dartEnvironmentSdk`         | Dart SDK constraint                                                                           | `>=3.8.0 <4.0.0`       |
-| `dartNetworkLayerVersion`    | Version for `dart_network_layer_core`                                                         | `^1.0.0-dev.10`        |
+| `dartNetworkLayerVersion`    | Version for `dart_network_layer_core`                                                         | `^1.0.0`        |
 | `jsonAnnotationVersion`      | Version for `json_annotation`                                                                 | `'>=4.12.0 <5.0.0'`    |
 | `builtCollectionVersion`     | Version for `built_collection`                                                                | `'>=5.1.1 <6.0.0'`     |
 | `testVersion`                | Version for `test`                                                                            | `>=1.21.6 <2.0.0`      |
