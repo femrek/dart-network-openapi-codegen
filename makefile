@@ -41,7 +41,7 @@ pubget:
 		cd $$dir && dart pub get; cd -; \
 	done
 
-build_runner:
+build_runner: pubget
 	for dir in generated-output/*/*; do \
 	    echo "Running dart run build_runner build in $$dir"; \
 	    cd $$dir && dart run build_runner build; cd -; \
