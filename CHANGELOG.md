@@ -1,3 +1,36 @@
+## 0.2.0 - 2026-08-04
+
+
+
+### 🚀 Features
+
+- Feat: remove built_value support from serialization options
+
+BREAKING_CHANGE: built_value generation is no more supported.
+
+- Feat: introduce BaseSchema class and update model references
+
+- Feat: add unknownDefaultOpenApi to enums for better error handling
+
+
+
+### 🐛 Bug Fixes
+
+- Fix: correct directory path in build_runner command and update test workflow
+
+- Fix: adjust json_serializable enums annotations.
+
+- remove @JsonEnum and other annotations from enum.mustache. (keep in inline enums.)
+
+
+
+### 🚜 Refactor
+
+- Refactor: remove unused template files.
+
+- Refactor: update linter in schema classes in json_serialization.
+
+
 ## 0.1.21 - 2026-07-28
 
 
