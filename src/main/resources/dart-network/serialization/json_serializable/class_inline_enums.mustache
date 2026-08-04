@@ -1,19 +1,12 @@
-{{!
-    Generate an enum for any variables that are declared as inline enums
-}}
 {{#vars}}
     {{^isModel}}
     {{#enumName}}
         {{^isContainer}}
-
 {{>serialization/json_serializable/enum_inline}}
-
         {{/isContainer}}
         {{#isContainer}}
             {{#mostInnerItems}}
-
 {{>serialization/json_serializable/enum_inline}}
-
             {{/mostInnerItems}}
         {{/isContainer}}
     {{/enumName}}

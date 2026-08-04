@@ -4,30 +4,29 @@
 @Deprecated('{{{enumName}}} has been deprecated')
 {{/isDeprecated}}
 enum {{{ enumName }}} {
-{{#allowableValues}}
-{{#enumVars}}
-{{^isNull}}
-{{#description}}
-    /// {{{.}}}
-{{/description}}
-{{{name}}}({{{value}}}),
-{{/isNull}}
-{{/enumVars}}
-{{/allowableValues}}
-unknownDefaultOpenApi('unknown_default_open_api');
+  {{#allowableValues}}
+  {{#enumVars}}
+  {{^isNull}}
+  {{#description}}
+      /// {{{.}}}
+  {{/description}}
+  {{{name}}}({{{value}}}),
+  {{/isNull}}
+  {{/enumVars}}
+  {{/allowableValues}}
+  unknownDefaultOpenApi('unknown_default_open_api');
 
-const {{{enumName}}}(this.value);
+  const {{{enumName}}}(this.value);
 
-final String value;
+  final String value;
 
-factory {{{enumName}}}.fromJson(String value) {
-  return {{{enumName}}}.values.firstWhere(
-    (e) => e.value == value,
-    orElse: () => {{{enumName}}}.unknownDefaultOpenApi,
-  );
-}
+  factory {{{enumName}}}.fromJson(String value) {
+    return {{{enumName}}}.values.firstWhere(
+      (e) => e.value == value,
+      orElse: () => {{{enumName}}}.unknownDefaultOpenApi,
+    );
+  }
 
-String toJson() => value;
-
+  String toJson() => value;
 }
 {{/enumName}}
