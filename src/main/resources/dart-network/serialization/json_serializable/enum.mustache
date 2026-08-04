@@ -2,11 +2,9 @@
 {{#isDeprecated}}
 @Deprecated('{{{classname}}} has been deprecated')
 {{/isDeprecated}}
-@JsonEnum(valueField: 'value')
-enum {{{classname}}} {
+enum {{{classname}}} implements Schema {
   {{#allowableValues}}
     {{#enumVars}}
-  @JsonValue({{{value}}})
   {{{name}}}({{{value}}}){{^-last}},{{/-last}}{{#-last}};{{/-last}}
     {{/enumVars}}
   {{/allowableValues}}
@@ -21,6 +19,9 @@ enum {{{classname}}} {
   }
 
   {{{dataType}}} toJson() => value;
+
+  @override
+  String toLogString() => value.toString();
 }
 
 class {{{classname}}}Factory extends JsonSchemaFactory<{{{classname}}}> {
