@@ -1,4 +1,4 @@
-class {{{classname}}} extends Schema {
+class {{{classname}}} extends BaseSchema {
 {{>dart_constructor}}
 
 {{#vars}}
@@ -55,6 +55,7 @@ class {{{classname}}} extends Schema {
   @override
   String toString() => '{{{classname}}}[{{#vars}}{{{name}}}=${{{name}}}{{^-last}}, {{/-last}}{{/vars}}]';
 
+  @override
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
   {{#vars}}

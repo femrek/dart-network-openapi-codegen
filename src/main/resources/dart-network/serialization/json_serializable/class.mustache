@@ -7,7 +7,7 @@
   disallowUnrecognizedKeys: false,
   explicitToJson: true,
 )
-class {{{classname}}} extends Schema {
+class {{{classname}}} extends BaseSchema {
 {{>dart_constructor}}
 
 {{#vars}}
@@ -23,6 +23,7 @@ class {{{classname}}} extends Schema {
 
   factory {{{classname}}}.fromJson(Map<String, dynamic> json) => _${{{classname}}}FromJson(json);
 
+  @override
   Map<String, dynamic> toJson() => _${{{classname}}}ToJson(this);
 
   static List<{{{classname}}}> listFromJson(dynamic json, {bool growable = false,}) {

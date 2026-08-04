@@ -1,0 +1,8 @@
+{{>header}}
+import 'package:dart_network_layer_core/dart_network_layer_core.dart';
+
+abstract class BaseSchema extends Schema {
+  const BaseSchema();
+
+  Map<String, dynamic> toJson();
+}
