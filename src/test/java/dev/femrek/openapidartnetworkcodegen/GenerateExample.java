@@ -67,7 +67,7 @@ public class GenerateExample {
         GeneratorConfig[] generatorConfigs = {
 //                new GeneratorConfig("dart", "Standard Dart Client", "dart-client"),
 //                new GeneratorConfig("dart-dio",     "Dart Dio Client",               "dart-dio-client"),
-                new GeneratorConfig("dart-network", "Dart Network Client (Custom)", "dart-network-client"),
+                new GeneratorConfig("dart-network", "Dart Network Client (Custom)", "dart-network-client", "json_serializable"),
         };
 
         boolean allSuccessful = true;
@@ -78,17 +78,19 @@ public class GenerateExample {
             String generator = config.generatorName();
             String description = config.description();
             String outputDir = baseOutputDir + "/" + config.folderName();
+            String serialization = config.serializationLibrary();
 
             System.out.println("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
             System.out.println("Generator " + (i + 1) + "/" + generatorConfigs.length + ": " + description);
             System.out.println("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
             System.out.println("Generator: " + generator);
             System.out.println("Output: " + outputDir);
+            System.out.println("Serialization: " + serialization);
             System.out.println();
 
             try {
                 // Configure the code generator
-                CodegenConfigurator configurator = getCodegenConfigurator(specFile, outputDir, generator);
+                CodegenConfigurator configurator = getCodegenConfigurator(specFile, outputDir, generator, serialization);
 
                 System.out.println("  ⚙️  Configuring generator...");
                 ClientOptInput clientOptInput = configurator.toClientOptInput();
@@ -132,7 +134,11 @@ public class GenerateExample {
         }
     }
 
-    private static @NonNull CodegenConfigurator getCodegenConfigurator(File specFile, String outputDir, String generatorName) {
+    private static @NonNull CodegenConfigurator getCodegenConfigurator(
+            File specFile,
+            String outputDir,
+            String generatorName,
+            String serializationLibrary) {
         // Derive the package name from the spec filename (without extension), converted to snake_case
         String specFileName = specFile.getName();
         String specBaseName = specFileName.substring(0, specFileName.lastIndexOf('.'));
@@ -152,7 +158,7 @@ public class GenerateExample {
         configurator.addAdditionalProperty("pubDescription", "API Client for " + specBaseName + " generated with " + generatorName);
 
         // This sets the serialization library (e.g., json_serializable)
-        configurator.addAdditionalProperty("serializationLibrary", "json_serializable");
+        configurator.addAdditionalProperty("serializationLibrary", serializationLibrary);
 
         return configurator;
     }
@@ -185,11 +191,16 @@ public class GenerateExample {
         private final String generatorName;
         private final String description;
         private final String folderName;
+        private final String serializationLibrary;
 
-        private GeneratorConfig(String generatorName, String description, String folderName) {
+        private GeneratorConfig(String generatorName,
+                                String description,
+                                String folderName,
+                                String serializationLibrary) {
             this.generatorName = generatorName;
             this.description = description;
             this.folderName = folderName;
+            this.serializationLibrary = serializationLibrary;
         }
 
         public String generatorName() {
@@ -204,6 +215,10 @@ public class GenerateExample {
             return folderName;
         }
 
+        public String serializationLibrary() {
+            return serializationLibrary;
+        }
+
         @Override
         public boolean equals(Object obj) {
             if (obj == this) return true;
@@ -211,12 +226,13 @@ public class GenerateExample {
             var that = (GeneratorConfig) obj;
             return Objects.equals(this.generatorName, that.generatorName) &&
                     Objects.equals(this.description, that.description) &&
-                    Objects.equals(this.folderName, that.folderName);
+                    Objects.equals(this.folderName, that.folderName) &&
+                    Objects.equals(this.serializationLibrary, that.serializationLibrary);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(generatorName, description, folderName);
+            return Objects.hash(generatorName, description, folderName, serializationLibrary);
         }
 
         @Override
@@ -224,9 +240,10 @@ public class GenerateExample {
             return "GeneratorConfig[" +
                     "generatorName=" + generatorName + ", " +
                     "description=" + description + ", " +
-                    "folderName=" + folderName + ']';
+                    "folderName=" + folderName + ", " +
+                    "serializationLibrary=" + serializationLibrary + ']';
         }
 
-        }
+    }
 }
 
