@@ -5,9 +5,10 @@
 enum {{{classname}}} implements Schema {
   {{#allowableValues}}
     {{#enumVars}}
-  {{{name}}}({{{value}}}){{^-last}},{{/-last}}{{#-last}};{{/-last}}
+  {{{name}}}({{{value}}}),
     {{/enumVars}}
   {{/allowableValues}}
+  unknownDefaultOpenApi({{#isString}}'unknown_default_open_api'{{/isString}}{{^isString}}11184809{{/isString}});
 
   final {{{dataType}}} value;
   const {{{classname}}}(this.value);
@@ -15,7 +16,10 @@ enum {{{classname}}} implements Schema {
   static const factory = {{{classname}}}Factory();
 
   factory {{{classname}}}.fromJson({{{dataType}}} value) {
-    return {{{classname}}}.values.firstWhere((e) => e.value == value);
+    return {{{classname}}}.values.firstWhere(
+      (e) => e.value == value,
+      orElse: () => {{{classname}}}.unknownDefaultOpenApi,
+    );
   }
 
   {{{dataType}}} toJson() => value;

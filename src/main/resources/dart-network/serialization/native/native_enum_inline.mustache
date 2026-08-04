@@ -16,6 +16,7 @@ class {{{enumName}}} {
   static const {{{name}}} = {{{enumName}}}._({{#isString}}r{{/isString}}{{{value}}});
     {{/enumVars}}
   {{/allowableValues}}
+  static const unknownDefaultOpenApi = {{{enumName}}}._({{#isString}}r'unknown_default_open_api'{{/isString}}{{^isString}}11184809{{/isString}});
 
   /// List of all possible values in this [enum][{{{enumName}}}].
   static const values = <{{{enumName}}}>[
@@ -24,6 +25,7 @@ class {{{enumName}}} {
     {{{name}}},
     {{/enumVars}}
   {{/allowableValues}}
+    unknownDefaultOpenApi,
   ];
 
   static {{{enumName}}}? fromJson(dynamic value) => {{{enumName}}}TypeTransformer().decode(value);
@@ -71,6 +73,7 @@ class {{{enumName}}}TypeTransformer {
           if (!allowNull) {
             throw ArgumentError('Unknown enum value to decode: $data');
           }
+          return {{{enumName}}}.unknownDefaultOpenApi;
       }
     }
     return null;

@@ -1,5 +1,5 @@
 {{#description}}/// {{{.}}}{{/description}}
-class {{{classname}}} {
+class {{{classname}}} implements Schema {
   /// Instantiate a new enum with the provided [value].
   const {{{classname}}}._(this.value);
 
@@ -11,11 +11,15 @@ class {{{classname}}} {
 
   {{{dataType}}} toJson() => value;
 
+  @override
+  String toLogString() => value.toString();
+
   {{#allowableValues}}
     {{#enumVars}}
   static const {{{name}}} = {{{classname}}}._({{#isString}}r{{/isString}}{{{value}}});
     {{/enumVars}}
   {{/allowableValues}}
+  static const unknownDefaultOpenApi = {{{classname}}}._({{#isString}}r'unknown_default_open_api'{{/isString}}{{^isString}}11184809{{/isString}});
 
   /// List of all possible values in this [enum][{{{classname}}}].
   static const values = <{{{classname}}}>[
@@ -24,6 +28,7 @@ class {{{classname}}} {
     {{{name}}},
     {{/enumVars}}
   {{/allowableValues}}
+    unknownDefaultOpenApi,
   ];
 
   static {{{classname}}}? fromJson(dynamic value) => {{{classname}}}TypeTransformer().decode(value);
@@ -71,6 +76,7 @@ class {{{classname}}}TypeTransformer {
           if (!allowNull) {
             throw ArgumentError('Unknown enum value to decode: $data');
           }
+          return {{{classname}}}.unknownDefaultOpenApi;
       }
     }
     return null;
