@@ -24,7 +24,7 @@ public class DartNetworkClientCodegen extends AbstractDartCodegen {
     public static final String SERIALIZATION_LIBRARY_BUILT_VALUE = "built_value";
 
     public static final String DART_NETWORK_LAYER_VERSION = "dartNetworkLayerVersion";
-    public static final String DART_NETWORK_LAYER_VERSION_DEFAULT = "^1.0.0-rc.13";
+    public static final String DART_NETWORK_LAYER_VERSION_DEFAULT = "^1.0.0";
 
     private static final Set<String> DART_PRIMITIVES = Set.of(
             "String", "int", "double", "bool", "num", "DateTime", "Object", "dynamic"
