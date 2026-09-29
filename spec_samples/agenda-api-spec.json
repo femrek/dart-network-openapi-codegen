@@ -807,7 +807,7 @@
         ],
         "summary": "Get facet schema for YouTube RSS",
         "description": "Returns the filter and sort capabilities schema manifest for dynamic frontends.",
-        "operationId": "getFacetSchema",
+        "operationId": "getYoutubeRSSFacetSchema",
         "responses": {
           "200": {
             "description": "Successfully retrieved facet schema",
@@ -1114,7 +1114,7 @@
         ],
         "summary": "Get facet schema for YouTube Inspections",
         "description": "Returns the filter and sort capabilities schema manifest for dynamic frontends.",
-        "operationId": "getFacetSchema_1",
+        "operationId": "getYoutubeInspectionFacetSchema",
         "responses": {
           "200": {
             "description": "Successfully retrieved facet schema",
@@ -1555,7 +1555,7 @@
         ],
         "summary": "Get facet schema for Transcripts",
         "description": "Returns the filter and sort capabilities schema manifest for dynamic frontends.",
-        "operationId": "getFacetSchema_2",
+        "operationId": "getTranscriptFacetSchema",
         "responses": {
           "200": {
             "description": "Successfully retrieved facet schema",
@@ -1962,7 +1962,7 @@
         ],
         "summary": "Get facet schema for Topics",
         "description": "Returns the filter and sort capabilities schema manifest for dynamic frontends.",
-        "operationId": "getFacetSchema_3",
+        "operationId": "getTopicFacetSchema",
         "responses": {
           "200": {
             "description": "Successfully retrieved facet schema",
@@ -2381,7 +2381,7 @@
         ],
         "summary": "Get facet schema for Summaries",
         "description": "Returns the filter and sort capabilities schema manifest for dynamic frontends.",
-        "operationId": "getFacetSchema_4",
+        "operationId": "getSummaryFacetSchema",
         "responses": {
           "200": {
             "description": "Successfully retrieved facet schema",
@@ -3056,7 +3056,7 @@
         ],
         "summary": "Get facet schema for LLM Generation Metadata",
         "description": "Returns the filter and sort capabilities schema manifest for dynamic frontends.",
-        "operationId": "getFacetSchema_5",
+        "operationId": "getLlmGenerationMetadataFacetSchema",
         "responses": {
           "200": {
             "description": "Successfully retrieved facet schema",
@@ -3814,7 +3814,7 @@
         ],
         "summary": "Get facet schema for Error Logs",
         "description": "Returns the filter and sort capabilities schema manifest for dynamic frontends.",
-        "operationId": "getFacetSchema_6",
+        "operationId": "getErrorLogsFacetSchema",
         "responses": {
           "200": {
             "description": "Successfully retrieved facet schema",
@@ -4398,22 +4398,6 @@
             "type": "integer",
             "format": "int32"
           },
-          "pageable": {
-            "$ref": "#/components/schemas/PageableObject"
-          },
-          "sort": {
-            "$ref": "#/components/schemas/SortObject"
-          },
-          "first": {
-            "type": "boolean"
-          },
-          "last": {
-            "type": "boolean"
-          },
-          "numberOfElements": {
-            "type": "integer",
-            "format": "int32"
-          },
           "size": {
             "type": "integer",
             "format": "int32"
@@ -4428,6 +4412,22 @@
             "type": "integer",
             "format": "int32"
           },
+          "pageable": {
+            "$ref": "#/components/schemas/PageableObject"
+          },
+          "sort": {
+            "$ref": "#/components/schemas/SortObject"
+          },
+          "numberOfElements": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "first": {
+            "type": "boolean"
+          },
+          "last": {
+            "type": "boolean"
+          },
           "empty": {
             "type": "boolean"
           }
@@ -4436,6 +4436,10 @@
       "PageableObject": {
         "type": "object",
         "properties": {
+          "offset": {
+            "type": "integer",
+            "format": "int64"
+          },
           "paged": {
             "type": "boolean"
           },
@@ -4452,23 +4456,19 @@
           },
           "unpaged": {
             "type": "boolean"
-          },
-          "offset": {
-            "type": "integer",
-            "format": "int64"
           }
         }
       },
       "SortObject": {
         "type": "object",
         "properties": {
+          "empty": {
+            "type": "boolean"
+          },
           "sorted": {
             "type": "boolean"
           },
           "unsorted": {
-            "type": "boolean"
-          },
-          "empty": {
             "type": "boolean"
           }
         }
@@ -4559,22 +4559,6 @@
             "type": "integer",
             "format": "int32"
           },
-          "pageable": {
-            "$ref": "#/components/schemas/PageableObject"
-          },
-          "sort": {
-            "$ref": "#/components/schemas/SortObject"
-          },
-          "first": {
-            "type": "boolean"
-          },
-          "last": {
-            "type": "boolean"
-          },
-          "numberOfElements": {
-            "type": "integer",
-            "format": "int32"
-          },
           "size": {
             "type": "integer",
             "format": "int32"
@@ -4588,6 +4572,22 @@
           "number": {
             "type": "integer",
             "format": "int32"
+          },
+          "pageable": {
+            "$ref": "#/components/schemas/PageableObject"
+          },
+          "sort": {
+            "$ref": "#/components/schemas/SortObject"
+          },
+          "numberOfElements": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "first": {
+            "type": "boolean"
+          },
+          "last": {
+            "type": "boolean"
           },
           "empty": {
             "type": "boolean"
@@ -4605,22 +4605,6 @@
             "type": "integer",
             "format": "int32"
           },
-          "pageable": {
-            "$ref": "#/components/schemas/PageableObject"
-          },
-          "sort": {
-            "$ref": "#/components/schemas/SortObject"
-          },
-          "first": {
-            "type": "boolean"
-          },
-          "last": {
-            "type": "boolean"
-          },
-          "numberOfElements": {
-            "type": "integer",
-            "format": "int32"
-          },
           "size": {
             "type": "integer",
             "format": "int32"
@@ -4634,6 +4618,22 @@
           "number": {
             "type": "integer",
             "format": "int32"
+          },
+          "pageable": {
+            "$ref": "#/components/schemas/PageableObject"
+          },
+          "sort": {
+            "$ref": "#/components/schemas/SortObject"
+          },
+          "numberOfElements": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "first": {
+            "type": "boolean"
+          },
+          "last": {
+            "type": "boolean"
           },
           "empty": {
             "type": "boolean"
@@ -4702,22 +4702,6 @@
             "type": "integer",
             "format": "int32"
           },
-          "pageable": {
-            "$ref": "#/components/schemas/PageableObject"
-          },
-          "sort": {
-            "$ref": "#/components/schemas/SortObject"
-          },
-          "first": {
-            "type": "boolean"
-          },
-          "last": {
-            "type": "boolean"
-          },
-          "numberOfElements": {
-            "type": "integer",
-            "format": "int32"
-          },
           "size": {
             "type": "integer",
             "format": "int32"
@@ -4731,6 +4715,22 @@
           "number": {
             "type": "integer",
             "format": "int32"
+          },
+          "pageable": {
+            "$ref": "#/components/schemas/PageableObject"
+          },
+          "sort": {
+            "$ref": "#/components/schemas/SortObject"
+          },
+          "numberOfElements": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "first": {
+            "type": "boolean"
+          },
+          "last": {
+            "type": "boolean"
           },
           "empty": {
             "type": "boolean"
@@ -4783,22 +4783,6 @@
             "type": "integer",
             "format": "int32"
           },
-          "pageable": {
-            "$ref": "#/components/schemas/PageableObject"
-          },
-          "sort": {
-            "$ref": "#/components/schemas/SortObject"
-          },
-          "first": {
-            "type": "boolean"
-          },
-          "last": {
-            "type": "boolean"
-          },
-          "numberOfElements": {
-            "type": "integer",
-            "format": "int32"
-          },
           "size": {
             "type": "integer",
             "format": "int32"
@@ -4812,6 +4796,22 @@
           "number": {
             "type": "integer",
             "format": "int32"
+          },
+          "pageable": {
+            "$ref": "#/components/schemas/PageableObject"
+          },
+          "sort": {
+            "$ref": "#/components/schemas/SortObject"
+          },
+          "numberOfElements": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "first": {
+            "type": "boolean"
+          },
+          "last": {
+            "type": "boolean"
           },
           "empty": {
             "type": "boolean"
@@ -4932,22 +4932,6 @@
             "type": "integer",
             "format": "int32"
           },
-          "pageable": {
-            "$ref": "#/components/schemas/PageableObject"
-          },
-          "sort": {
-            "$ref": "#/components/schemas/SortObject"
-          },
-          "first": {
-            "type": "boolean"
-          },
-          "last": {
-            "type": "boolean"
-          },
-          "numberOfElements": {
-            "type": "integer",
-            "format": "int32"
-          },
           "size": {
             "type": "integer",
             "format": "int32"
@@ -4961,6 +4945,22 @@
           "number": {
             "type": "integer",
             "format": "int32"
+          },
+          "pageable": {
+            "$ref": "#/components/schemas/PageableObject"
+          },
+          "sort": {
+            "$ref": "#/components/schemas/SortObject"
+          },
+          "numberOfElements": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "first": {
+            "type": "boolean"
+          },
+          "last": {
+            "type": "boolean"
           },
           "empty": {
             "type": "boolean"
@@ -4999,22 +4999,6 @@
             "type": "integer",
             "format": "int32"
           },
-          "pageable": {
-            "$ref": "#/components/schemas/PageableObject"
-          },
-          "sort": {
-            "$ref": "#/components/schemas/SortObject"
-          },
-          "first": {
-            "type": "boolean"
-          },
-          "last": {
-            "type": "boolean"
-          },
-          "numberOfElements": {
-            "type": "integer",
-            "format": "int32"
-          },
           "size": {
             "type": "integer",
             "format": "int32"
@@ -5028,6 +5012,22 @@
           "number": {
             "type": "integer",
             "format": "int32"
+          },
+          "pageable": {
+            "$ref": "#/components/schemas/PageableObject"
+          },
+          "sort": {
+            "$ref": "#/components/schemas/SortObject"
+          },
+          "numberOfElements": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "first": {
+            "type": "boolean"
+          },
+          "last": {
+            "type": "boolean"
           },
           "empty": {
             "type": "boolean"
