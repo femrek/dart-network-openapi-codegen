@@ -1,3 +1,12 @@
+## 0.2.1 - 2026-09-29
+
+
+
+### 🚀 Features
+
+- Feat: override toParamName to handle dots as word separators
+
+
 ## 0.2.0 - 2026-08-04
 
 
