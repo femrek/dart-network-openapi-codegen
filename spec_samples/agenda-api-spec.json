@@ -1,0 +1,5101 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "OpenAPI definition",
+    "version": "v0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080"
+    },
+    {
+      "url": "https://agenda-api.femrek.dev"
+    }
+  ],
+  "tags": [
+    {
+      "name": "LlmGenerationMetadata",
+      "description": "Endpoints for retrieving LLM Generation Metadata tied to inspections"
+    },
+    {
+      "name": "FacetSchemas",
+      "description": "Endpoints for discovering filter and sort schema metadata for dynamic frontends"
+    },
+    {
+      "name": "YoutubeInspections",
+      "description": "Endpoints for retrieving YouTube Video Inspections data"
+    },
+    {
+      "name": "ErrorLogs",
+      "description": "Endpoints for retrieving dynamic error log documents from MongoDB"
+    },
+    {
+      "name": "Topics",
+      "description": "Endpoints for retrieving Emerging Topics / Events data"
+    },
+    {
+      "name": "Transcripts",
+      "description": "Endpoints for retrieving YouTube Video Transcripts data"
+    },
+    {
+      "name": "YoutubeRSSs",
+      "description": "Endpoints for retrieving YouTube RSS feed data"
+    },
+    {
+      "name": "Summaries",
+      "description": "Endpoints for retrieving YouTube Video Summaries data"
+    }
+  ],
+  "paths": {
+    "/api/youtube-inspections/many": {
+      "get": {
+        "tags": [
+          "YoutubeInspections"
+        ],
+        "summary": "Get Many YouTube Inspections by IDs",
+        "description": "Retrieves YouTube inspections matching the provided list of IDs (supports MongoDB ObjectIDs and YouTube String IDs like yt:video:...).",
+        "operationId": "getManyYoutubeInspections",
+        "parameters": [
+          {
+            "name": "ids",
+            "in": "query",
+            "description": "List of MongoDB Document IDs or YouTube String IDs (e.g. ?ids=yt:video:1,yt:video:2 or ?ids=yt:video:1&ids=yt:video:2)",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved inspections",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/YoutubeInspectionResponse"
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Default error response represented as RFC 7807 Problem Details",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "YoutubeInspections"
+        ],
+        "summary": "Get Many YouTube Inspections by IDs (POST)",
+        "description": "Retrieves YouTube inspections matching the provided list of IDs in the request body (useful for large batches exceeding URL length limits).",
+        "operationId": "getManyYoutubeInspectionsByPost",
+        "requestBody": {
+          "description": "List of MongoDB Document IDs or YouTube String IDs",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved inspections",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/YoutubeInspectionResponse"
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Default error response represented as RFC 7807 Problem Details",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/transcripts/many": {
+      "get": {
+        "tags": [
+          "Transcripts"
+        ],
+        "summary": "Get Many YouTube Video Transcripts by IDs",
+        "description": "Retrieves YouTube video transcripts matching the provided list of IDs (supports MongoDB ObjectIDs, YouTube String IDs like yt:video:..., or YouTube Video IDs).",
+        "operationId": "getManyTranscripts",
+        "parameters": [
+          {
+            "name": "ids",
+            "in": "query",
+            "description": "List of MongoDB Document IDs, YouTube String IDs, or YouTube Video IDs (e.g. ?ids=yt:video:1,yt:video:2 or ?ids=yt:video:1&ids=yt:video:2)",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved transcripts",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TranscriptResponse"
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Default error response represented as RFC 7807 Problem Details",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Transcripts"
+        ],
+        "summary": "Get Many YouTube Video Transcripts by IDs (POST)",
+        "description": "Retrieves YouTube video transcripts matching the provided list of IDs in the request body (useful for large batches exceeding URL length limits).",
+        "operationId": "getManyTranscriptsByPost",
+        "requestBody": {
+          "description": "List of MongoDB Document IDs, YouTube String IDs, or YouTube Video IDs",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved transcripts",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TranscriptResponse"
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Default error response represented as RFC 7807 Problem Details",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/summaries/many": {
+      "get": {
+        "tags": [
+          "Summaries"
+        ],
+        "summary": "Get Many YouTube Video Summaries by IDs",
+        "description": "Retrieves YouTube video summaries matching the provided list of IDs (supports MongoDB ObjectIDs and YouTube String IDs like yt:video:...).",
+        "operationId": "getManySummaries",
+        "parameters": [
+          {
+            "name": "ids",
+            "in": "query",
+            "description": "List of MongoDB Document IDs or YouTube String IDs (e.g. ?ids=yt:video:1,yt:video:2 or ?ids=yt:video:1&ids=yt:video:2)",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved summaries",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SummaryResponse"
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Default error response represented as RFC 7807 Problem Details",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Summaries"
+        ],
+        "summary": "Get Many YouTube Video Summaries by IDs (POST)",
+        "description": "Retrieves YouTube video summaries matching the provided list of IDs in the request body (useful for large batches exceeding URL length limits).",
+        "operationId": "getManySummariesByPost",
+        "requestBody": {
+          "description": "List of MongoDB Document IDs or YouTube String IDs",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved summaries",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SummaryResponse"
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Default error response represented as RFC 7807 Problem Details",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/llm-generation-metadata/many": {
+      "get": {
+        "tags": [
+          "LlmGenerationMetadata"
+        ],
+        "summary": "Get Many LLM Generation Metadata by IDs",
+        "description": "Retrieves LLM generation metadata records matching the provided list of IDs (supports MongoDB ObjectIDs and generation IDs).",
+        "operationId": "getManyLlmGenerationMetadata",
+        "parameters": [
+          {
+            "name": "ids",
+            "in": "query",
+            "description": "List of MongoDB Document IDs or generation IDs (e.g. ?ids=id1,id2 or ?ids=id1&ids=id2)",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved generation metadata",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/LlmGenerationMetadataResponse"
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Default error response represented as RFC 7807 Problem Details",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "LlmGenerationMetadata"
+        ],
+        "summary": "Get Many LLM Generation Metadata by IDs (POST)",
+        "description": "Retrieves LLM generation metadata records matching the provided list of IDs in the request body (useful for large batches exceeding URL length limits).",
+        "operationId": "getManyLlmGenerationMetadataByPost",
+        "requestBody": {
+          "description": "List of MongoDB Document IDs or generation IDs",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved generation metadata",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/LlmGenerationMetadataResponse"
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Default error response represented as RFC 7807 Problem Details",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/youtube-rss": {
+      "get": {
+        "tags": [
+          "YoutubeRSSs"
+        ],
+        "summary": "List YouTube RSS items",
+        "description": "Retrieves a paginated list of YouTube RSS entries with an optional text search and typed filters.\n\n### Sorting Behavior:\n- Default sort: `pubDate,desc`.\n- `pubDate,desc` is always appended as a secondary tie-breaker sort if not already specified in the request.\n- Pass sort criteria as `sort=property(,asc|desc)`. Multiple sort criteria are supported.",
+        "operationId": "getAllYoutubeRSSs",
+        "parameters": [
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sorting criteria in the format: `property(,asc|desc)`. Default direction is `asc`. Multiple sort criteria are supported.\n\nSupported property names:\n- `pubDate` (or `pub_date`): Publication date (default: `pubDate,desc`)\n- `saveAt`: Date saved\n- `title`: Video title\n- `author`: Channel / author name\n- `channelId`: YouTube Channel ID\n- `videoId`: YouTube Video ID\n- `description`: Video description\n- `id` / `_id`: Record ID. Allowed sort fields: [pubDate, saveAt, author, title, channelId, videoId, description]",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "default": [
+                "pubDate,DESC"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "example": "pubDate,desc"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Zero-based page index (0..N)",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "minimum": 0
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "The size of the page to be returned",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 10,
+              "minimum": 1
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "author.eq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "author.neq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "author.like",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "title.eq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "title.neq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "title.like",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "channelId.eq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "channelId.neq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "channelId.like",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "videoId.eq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "videoId.neq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "videoId.like",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "description.eq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "description.neq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "description.like",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pubDate.eq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "pubDate.neq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "pubDate.gt",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "pubDate.gte",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "pubDate.lt",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "pubDate.lte",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "saveAt.eq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "saveAt.neq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "saveAt.gt",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "saveAt.gte",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "saveAt.lt",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "saveAt.lte",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved list of RSS entries",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageYoutubeRssResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Default error response represented as RFC 7807 Problem Details",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/youtube-rss/{id}": {
+      "get": {
+        "tags": [
+          "YoutubeRSSs"
+        ],
+        "summary": "Get YouTube RSS item by ID",
+        "description": "Retrieves a specific YouTube RSS entry by its MongoDB Document ID or its YouTube String ID (e.g., yt:video:123).",
+        "operationId": "getYoutubeRSS",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "MongoDB Document ID or YouTube String ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the RSS entry",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/YoutubeRssResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "RSS entry not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/YoutubeRssResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Default error response represented as RFC 7807 Problem Details",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/youtube-rss/facets/schema": {
+      "get": {
+        "tags": [
+          "YoutubeRSSs"
+        ],
+        "summary": "Get facet schema for YouTube RSS",
+        "description": "Returns the filter and sort capabilities schema manifest for dynamic frontends.",
+        "operationId": "getFacetSchema",
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved facet schema",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/FeatureFacetSchemaResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Default error response represented as RFC 7807 Problem Details",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/youtube-inspections": {
+      "get": {
+        "tags": [
+          "YoutubeInspections"
+        ],
+        "summary": "List YouTube Inspections",
+        "description": "Retrieves a paginated list of YouTube inspections with optional filtering and text search.\n\n### Sorting Behavior:\n- Default sort: `pubDate,desc`.\n- `pubDate,desc` is always appended as a secondary tie-breaker sort if not already specified in the request.\n- Pass sort criteria as `sort=property(,asc|desc)`. Multiple sort criteria are supported.",
+        "operationId": "getAllYoutubeInspections",
+        "parameters": [
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sorting criteria in the format: `property(,asc|desc)`. Default direction is `asc`. Multiple sort criteria are supported.\n\nSupported property names:\n- `pubDate` (or `pub_date`): Publication date (default: `pubDate,desc`)\n- `saveAt`: Date saved\n- `agendaMatchScore`: Agenda match score\n- `topicTitle`: Topic title\n- `primaryTopic`: Primary topic category\n- `isPolitical`: Political flag (true/false)\n- `isCompilation`: Compilation flag (true/false)\n- `isNewTopic`: New topic flag (true/false)\n- `briefSummary`: Summary text\n- `entryId`: Entry ID\n- `id` / `_id`: Record ID\n- `rssEntry.title`: Nested RSS video title\n- `rssEntry.author`: Nested RSS channel/author name\n- `rssEntry.channelId`: Nested RSS channel ID\n- `rssEntry.videoId`: Nested RSS video ID. Allowed sort fields: [pubDate, saveAt, agendaMatchScore, topicTitle, primaryTopic, isPolitical, isCompilation, isNewTopic, briefSummary, entryId, rssEntry.title, rssEntry.author, rssEntry.channelId, rssEntry.videoId]",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "default": [
+                "pubDate,DESC"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "example": "pubDate,desc"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Zero-based page index (0..N)",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "minimum": 0
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "The size of the page to be returned",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 10,
+              "minimum": 1
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "isCompilation.eq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "isCompilation.neq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "isPolitical.eq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "isPolitical.neq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "primaryTopic.eq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "primaryTopic.neq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "primaryTopic.like",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "detectedEntities.eq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "detectedEntities.neq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "detectedEntities.like",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pubDate.eq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "pubDate.neq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "pubDate.gt",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "pubDate.gte",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "pubDate.lt",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "pubDate.lte",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved list of inspections",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageYoutubeInspectionResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Default error response represented as RFC 7807 Problem Details",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/youtube-inspections/{id}": {
+      "get": {
+        "tags": [
+          "YoutubeInspections"
+        ],
+        "summary": "Get YouTube Inspection by ID",
+        "description": "Retrieves a specific YouTube inspection by its MongoDB Document ID or its YouTube String ID (e.g., yt:video:123).",
+        "operationId": "getYoutubeInspection",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "MongoDB Document ID or YouTube String ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the inspection",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/YoutubeInspectionResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Inspection not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/YoutubeInspectionResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Default error response represented as RFC 7807 Problem Details",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/youtube-inspections/facets/schema": {
+      "get": {
+        "tags": [
+          "YoutubeInspections"
+        ],
+        "summary": "Get facet schema for YouTube Inspections",
+        "description": "Returns the filter and sort capabilities schema manifest for dynamic frontends.",
+        "operationId": "getFacetSchema_1",
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved facet schema",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/FeatureFacetSchemaResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Default error response represented as RFC 7807 Problem Details",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/transcripts": {
+      "get": {
+        "tags": [
+          "Transcripts"
+        ],
+        "summary": "List YouTube Video Transcripts",
+        "description": "Retrieves a paginated list of video transcripts with rich filtering, text search, duration ranges, token count ranges, and publication date filtering.\n\n### Sorting Behavior:\n- Default sort: `pubDate,desc`.\n- `pubDate,desc` is always appended as a secondary tie-breaker sort if not already specified in the request.\n- Pass sort criteria as `sort=property(,asc|desc)`. Multiple sort criteria are supported.",
+        "operationId": "getAllTranscripts",
+        "parameters": [
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sorting criteria in the format: `property(,asc|desc)`. Default direction is `asc`. Multiple sort criteria are supported.\n\nSupported property names:\n- `pubDate` (or `pub_date`): Publication date (default: `pubDate,desc`)\n- `title`: Video title\n- `author`: Channel / author name\n- `channelId`: YouTube Channel ID\n- `videoId`: YouTube Video ID\n- `duration`: Video duration in seconds\n- `tokenCount` (or `token_count`): Token count\n- `languageCode`: Language code\n- `isGenerated`: Whether transcript was auto-generated\n- `cacheAt`: Cache timestamp\n- `id` / `_id`: Record ID. Allowed sort fields: [pubDate, title, author, channelId, videoId, duration, tokenCount, languageCode, isGenerated, cacheAt]",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "default": [
+                "pubDate,DESC"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "example": "pubDate,desc"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Zero-based page index (0..N)",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "minimum": 0
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "The size of the page to be returned",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 10,
+              "minimum": 1
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "author.eq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "author.neq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "author.like",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "channelId.eq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "channelId.neq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "channelId.like",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "videoId.eq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "videoId.neq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "videoId.like",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "languageCode.eq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "languageCode.neq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "languageCode.like",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "isGenerated.eq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "isGenerated.neq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "duration.eq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "duration.neq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "duration.gt",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "duration.gte",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "duration.lt",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "duration.lte",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "tokenCount.eq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "tokenCount.neq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "tokenCount.gt",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "tokenCount.gte",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "tokenCount.lt",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "tokenCount.lte",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pubDate.eq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "pubDate.neq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "pubDate.gt",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "pubDate.gte",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "pubDate.lt",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "pubDate.lte",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved list of transcripts",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageTranscriptListItemResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Default error response represented as RFC 7807 Problem Details",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/transcripts/{id}": {
+      "get": {
+        "tags": [
+          "Transcripts"
+        ],
+        "summary": "Get YouTube Video Transcript by ID",
+        "description": "Retrieves a specific video transcript by its MongoDB Document ID, its YouTube String ID (e.g., yt:video:v7tERwLYogQ), or its video ID (e.g., v7tERwLYogQ).",
+        "operationId": "getTranscript",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "MongoDB Document ID, YouTube String ID, or YouTube Video ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved transcript",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/TranscriptResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Transcript not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/TranscriptResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Default error response represented as RFC 7807 Problem Details",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/transcripts/facets/schema": {
+      "get": {
+        "tags": [
+          "Transcripts"
+        ],
+        "summary": "Get facet schema for Transcripts",
+        "description": "Returns the filter and sort capabilities schema manifest for dynamic frontends.",
+        "operationId": "getFacetSchema_2",
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved facet schema",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/FeatureFacetSchemaResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Default error response represented as RFC 7807 Problem Details",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/topics": {
+      "get": {
+        "tags": [
+          "Topics"
+        ],
+        "summary": "List Emerging Topics / Events",
+        "description": "Retrieves a paginated list of emerging topics/events with rich filtering, text search, and date range filtering.\n\n### Sorting Behavior:\n- Default sort: `lastSeen,desc`.\n- `lastSeen,desc` is always appended as a secondary tie-breaker sort if not already specified in the request.\n- Pass sort criteria as `sort=property(,asc|desc)`. Multiple sort criteria are supported.",
+        "operationId": "getAllTopics",
+        "parameters": [
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sorting criteria in the format: `property(,asc|desc)`. Default direction is `asc`. Multiple sort criteria are supported.\n\nSupported property names:\n- `lastSeen` (or `last_seen`): Last seen timestamp (default: `lastSeen,desc`)\n- `firstDetected` (or `first_detected`): First detected timestamp\n- `eventTitle` (or `event_title`): Event title\n- `primaryTopic` (or `primary_topic`): Primary topic category\n- `videoCount` (or `video_count`): Associated video count\n- `videoIds` (or `video_ids`): List of video IDs\n- `id` / `_id`: Record ID. Allowed sort fields: [lastSeen, firstDetected, eventTitle, primaryTopic, videoCount]",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "default": [
+                "lastSeen,DESC"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "example": "lastSeen,desc"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Zero-based page index (0..N)",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "minimum": 0
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "The size of the page to be returned",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 10,
+              "minimum": 1
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "eventTitle.eq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "eventTitle.neq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "eventTitle.like",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "primaryTopic.eq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "primaryTopic.neq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "primaryTopic.like",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "videoCount.eq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "videoCount.neq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "videoCount.gt",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "videoCount.gte",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "videoCount.lt",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "videoCount.lte",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "firstDetected.eq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "firstDetected.neq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "firstDetected.gt",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "firstDetected.gte",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "firstDetected.lt",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "firstDetected.lte",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "lastSeen.eq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "lastSeen.neq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "lastSeen.gt",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "lastSeen.gte",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "lastSeen.lt",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "lastSeen.lte",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "videoId.eq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "videoId.neq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "videoId.like",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved list of topics",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageTopicResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Default error response represented as RFC 7807 Problem Details",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/topics/{id}": {
+      "get": {
+        "tags": [
+          "Topics"
+        ],
+        "summary": "Get Topic / Emerging Event by ID",
+        "description": "Retrieves a specific emerging topic/event by its MongoDB Document ID.",
+        "operationId": "getTopic",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "MongoDB Document ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved topic",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/TopicResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Topic not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/TopicResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Default error response represented as RFC 7807 Problem Details",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/topics/facets/schema": {
+      "get": {
+        "tags": [
+          "Topics"
+        ],
+        "summary": "Get facet schema for Topics",
+        "description": "Returns the filter and sort capabilities schema manifest for dynamic frontends.",
+        "operationId": "getFacetSchema_3",
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved facet schema",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/FeatureFacetSchemaResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Default error response represented as RFC 7807 Problem Details",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/summaries": {
+      "get": {
+        "tags": [
+          "Summaries"
+        ],
+        "summary": "List YouTube Video Summaries",
+        "description": "Retrieves a paginated list of video summaries with rich filtering, text search, and publication date range filtering.\n\n### Sorting Behavior:\n- Default sort: `pubDate,desc`.\n- `pubDate,desc` is always appended as a secondary tie-breaker sort if not already specified in the request.\n- Pass sort criteria as `sort=property(,asc|desc)`. Multiple sort criteria are supported.",
+        "operationId": "getAllSummaries",
+        "parameters": [
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sorting criteria in the format: `property(,asc|desc)`. Default direction is `asc`. Multiple sort criteria are supported.\n\nSupported property names:\n- `pubDate` (or `pub_date`): Publication date (default: `pubDate,desc`)\n- `title`: Video title\n- `author`: Channel / author name\n- `channelId`: YouTube Channel ID\n- `languageCode`: Language code\n- `isGenerated`: Whether summary/transcript was auto-generated\n- `cacheAt`: Cache timestamp\n- `classification.agendaMatchScore`: Agenda match score\n- `classification.topicTitle`: Classification topic title\n- `classification.primaryTopic`: Classification primary topic\n- `id` / `_id`: Record ID. Allowed sort fields: [pubDate, title, author, channelId, languageCode, isGenerated, cacheAt, saveAt, summaryId, classification.agendaMatchScore, classification.topicTitle, classification.primaryTopic]",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "default": [
+                "pubDate,DESC"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "example": "pubDate,desc"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Zero-based page index (0..N)",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "minimum": 0
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "The size of the page to be returned",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 10,
+              "minimum": 1
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "author.eq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "author.neq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "author.like",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "channelId.eq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "channelId.neq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "channelId.like",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "languageCode.eq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "languageCode.neq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "languageCode.like",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "isGenerated.eq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "isGenerated.neq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "isPolitical.eq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "isPolitical.neq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "isCompilation.eq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "isCompilation.neq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "primaryTopic.eq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "primaryTopic.neq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "primaryTopic.like",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "topicTitle.eq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "topicTitle.neq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "topicTitle.like",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "detectedEntities.eq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "detectedEntities.neq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "detectedEntities.like",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pubDate.eq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "pubDate.neq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "pubDate.gt",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "pubDate.gte",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "pubDate.lt",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "pubDate.lte",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved list of summaries",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageSummaryListItemResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Default error response represented as RFC 7807 Problem Details",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/summaries/{id}": {
+      "get": {
+        "tags": [
+          "Summaries"
+        ],
+        "summary": "Get YouTube Video Summary by ID",
+        "description": "Retrieves a specific video summary by its MongoDB Document ID or its YouTube String ID (e.g., yt:video:tvLLyOwFudI).",
+        "operationId": "getSummary",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "MongoDB Document ID or YouTube String ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved summary",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SummaryResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Summary not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SummaryResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Default error response represented as RFC 7807 Problem Details",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/summaries/facets/schema": {
+      "get": {
+        "tags": [
+          "Summaries"
+        ],
+        "summary": "Get facet schema for Summaries",
+        "description": "Returns the filter and sort capabilities schema manifest for dynamic frontends.",
+        "operationId": "getFacetSchema_4",
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved facet schema",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/FeatureFacetSchemaResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Default error response represented as RFC 7807 Problem Details",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/llm-generation-metadata": {
+      "get": {
+        "tags": [
+          "LlmGenerationMetadata"
+        ],
+        "summary": "List LLM Generation Metadata",
+        "description": "Retrieves a paginated list of LLM generation metadata records tied to inspections with rich filtering, text search, token counts, cost ranges, and date range filtering.\n\n### Sorting Behavior:\n- Default sort: `saveAt,desc`.\n- `saveAt,desc` is always appended as a secondary tie-breaker sort if not already specified in the request.\n- Pass sort criteria as `sort=property(,asc|desc)`. Multiple sort criteria are supported.",
+        "operationId": "getAllLlmGenerationMetadata",
+        "parameters": [
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sorting criteria in the format: `property(,asc|desc)`. Default direction is `asc`. Multiple sort criteria are supported.\n\nSupported property names:\n- `saveAt` (or `save_at`): Date saved (default: `saveAt,desc`)\n- `created`: Unix timestamp created\n- `generationId` (or `generation_id`): Generation ID\n- `modelUsed` (or `model_used`, `model`): LLM model name\n- `provider`: Provider name\n- `finishReason` (or `finish_reason`): Finish reason\n- `usage.cost` (or `cost`): Total inference cost\n- `usage.totalTokens` (or `total_tokens`): Total tokens consumed\n- `usage.promptTokens` (or `prompt_tokens`): Prompt tokens\n- `usage.completionTokens` (or `completion_tokens`): Completion tokens\n- `id` / `_id`: Record ID. Allowed sort fields: [saveAt, created, generationId, modelUsed, provider, finishReason, usage.cost, usage.totalTokens, usage.promptTokens, usage.completionTokens, serviceTier, isByok]",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "default": [
+                "saveAt,DESC"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "example": "saveAt,desc"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Zero-based page index (0..N)",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "minimum": 0
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "The size of the page to be returned",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 10,
+              "minimum": 1
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "generationId.eq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "generationId.neq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "generationId.like",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "inspectionId.eq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "inspectionId.neq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "inspectionId.like",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "modelUsed.eq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "modelUsed.neq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "modelUsed.like",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "provider.eq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "provider.neq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "provider.like",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "finishReason.eq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "finishReason.neq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "finishReason.like",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "isByok.eq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "isByok.neq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "serviceTier.eq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "serviceTier.neq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "serviceTier.like",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "systemFingerprint.eq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "systemFingerprint.neq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "systemFingerprint.like",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "cost.eq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "cost.neq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "cost.gt",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "cost.gte",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "cost.lt",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "cost.lte",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "totalTokens.eq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "totalTokens.neq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "totalTokens.gt",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "totalTokens.gte",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "totalTokens.lt",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "totalTokens.lte",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "promptTokens.eq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "promptTokens.neq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "promptTokens.gt",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "promptTokens.gte",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "promptTokens.lt",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "promptTokens.lte",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "completionTokens.eq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "completionTokens.neq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "completionTokens.gt",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "completionTokens.gte",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "completionTokens.lt",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "completionTokens.lte",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "saveAt.eq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "saveAt.neq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "saveAt.gt",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "saveAt.gte",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "saveAt.lt",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "saveAt.lte",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "created.eq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "created.neq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "created.gt",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "created.gte",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "created.lt",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "created.lte",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved list of LLM generation metadata",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageLlmGenerationMetadataListResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Default error response represented as RFC 7807 Problem Details",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/llm-generation-metadata/{id}": {
+      "get": {
+        "tags": [
+          "LlmGenerationMetadata"
+        ],
+        "summary": "Get LLM Generation Metadata by ID",
+        "description": "Retrieves a specific LLM generation metadata record by its MongoDB Document ID or its generation ID.",
+        "operationId": "getLlmGenerationMetadata",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "MongoDB Document ID or generation ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the generation metadata",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/LlmGenerationMetadataResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Generation metadata not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/LlmGenerationMetadataResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Default error response represented as RFC 7807 Problem Details",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/llm-generation-metadata/facets/schema": {
+      "get": {
+        "tags": [
+          "LlmGenerationMetadata"
+        ],
+        "summary": "Get facet schema for LLM Generation Metadata",
+        "description": "Returns the filter and sort capabilities schema manifest for dynamic frontends.",
+        "operationId": "getFacetSchema_5",
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved facet schema",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/FeatureFacetSchemaResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Default error response represented as RFC 7807 Problem Details",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/facets/schema": {
+      "get": {
+        "tags": [
+          "FacetSchemas"
+        ],
+        "summary": "List all feature facet schemas",
+        "description": "Retrieves schema manifests for all registered features (or a single feature if `feature` query parameter is provided).",
+        "operationId": "getAllFacetSchemas",
+        "parameters": [
+          {
+            "name": "feature",
+            "in": "query",
+            "description": "Optional feature slug to retrieve directly (e.g. 'youtube-rss')",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved facet schemas",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Default error response represented as RFC 7807 Problem Details",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/facets/schema/{feature}": {
+      "get": {
+        "tags": [
+          "FacetSchemas"
+        ],
+        "summary": "Get facet schema for a specific feature",
+        "description": "Retrieves filter properties, supported operators, UI widgets, and sortable fields for a given feature slug.",
+        "operationId": "getFacetSchemaByFeature",
+        "parameters": [
+          {
+            "name": "feature",
+            "in": "path",
+            "description": "Feature slug (e.g. 'youtube-rss', 'transcripts', 'topics', 'summaries')",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved feature facet schema",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/FeatureFacetSchemaResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Feature schema not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/FeatureFacetSchemaResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Default error response represented as RFC 7807 Problem Details",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/error-logs": {
+      "get": {
+        "tags": [
+          "ErrorLogs"
+        ],
+        "summary": "List All Error Logs Across Collections",
+        "description": "Retrieves a unified, paginated list of dynamic error documents merged from all error collections\n(`rss_inspection_errors`, `transcript_fetch_errors`, `transcript_save_errors`, `summary_errors`).\n\n### Sorting Behavior:\n- Default sort: `_id,desc` (most recently created errors first, using MongoDB's auto-generated `_id` timestamp).\n- Merged error documents are sorted globally by creation time.\n\n### Creation Time Filtering:\n- Filter errors via `created.gte` (after), `created.lt` (before), etc.",
+        "operationId": "getAllErrorLogs",
+        "parameters": [
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sorting criteria in the format: `property(,asc|desc)`. Default direction is `desc` on `_id` (creation time).. Allowed sort fields: [_id]",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "default": [
+                "_id,DESC"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "example": "_id,desc"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Zero-based page index (0..N)",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "minimum": 0
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "The size of the page to be returned",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 10,
+              "minimum": 1
+            }
+          },
+          {
+            "name": "created.eq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "created.neq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "created.gt",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "created.gte",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "created.lt",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "created.lte",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved merged dynamic error log documents",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageDynamicErrorDocument"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Default error response represented as RFC 7807 Problem Details",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/error-logs/transcript-save": {
+      "get": {
+        "tags": [
+          "ErrorLogs"
+        ],
+        "summary": "List Transcript Save Errors",
+        "description": "Retrieves a paginated list of dynamic error documents from the `transcript_save_errors` collection.\n\n### Sorting Behavior:\n- Default sort: `_id,desc` (most recently created errors first, using MongoDB's auto-generated `_id` timestamp).\n- `_id,desc` is always appended as a secondary tie-breaker sort if not explicitly specified.\n- Pass sort criteria as `sort=property(,asc|desc)`.\n\n### Creation Time Filtering:\n- Filter errors via `created.gte` (after), `created.lt` (before), etc.",
+        "operationId": "getTranscriptSaveErrors",
+        "parameters": [
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sorting criteria in the format: `property(,asc|desc)`. Default direction is `desc` on `_id` (creation time).. Allowed sort fields: [_id]",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "default": [
+                "_id,DESC"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "example": "_id,desc"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Zero-based page index (0..N)",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "minimum": 0
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "The size of the page to be returned",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 10,
+              "minimum": 1
+            }
+          },
+          {
+            "name": "created.eq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "created.neq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "created.gt",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "created.gte",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "created.lt",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "created.lte",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved dynamic error log documents",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageDynamicErrorDocument"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Default error response represented as RFC 7807 Problem Details",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/error-logs/transcript-fetch": {
+      "get": {
+        "tags": [
+          "ErrorLogs"
+        ],
+        "summary": "List Transcript Fetch Errors",
+        "description": "Retrieves a paginated list of dynamic error documents from the `transcript_fetch_errors` collection.\n\n### Sorting Behavior:\n- Default sort: `_id,desc` (most recently created errors first, using MongoDB's auto-generated `_id` timestamp).\n- `_id,desc` is always appended as a secondary tie-breaker sort if not explicitly specified.\n- Pass sort criteria as `sort=property(,asc|desc)`.\n\n### Creation Time Filtering:\n- Filter errors via `created.gte` (after), `created.lt` (before), etc.",
+        "operationId": "getTranscriptFetchErrors",
+        "parameters": [
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sorting criteria in the format: `property(,asc|desc)`. Default direction is `desc` on `_id` (creation time).. Allowed sort fields: [_id]",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "default": [
+                "_id,DESC"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "example": "_id,desc"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Zero-based page index (0..N)",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "minimum": 0
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "The size of the page to be returned",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 10,
+              "minimum": 1
+            }
+          },
+          {
+            "name": "created.eq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "created.neq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "created.gt",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "created.gte",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "created.lt",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "created.lte",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved dynamic error log documents",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageDynamicErrorDocument"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Default error response represented as RFC 7807 Problem Details",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/error-logs/summary": {
+      "get": {
+        "tags": [
+          "ErrorLogs"
+        ],
+        "summary": "List Summary Errors",
+        "description": "Retrieves a paginated list of dynamic error documents from the `summary_errors` collection.\n\n### Sorting Behavior:\n- Default sort: `_id,desc` (most recently created errors first, using MongoDB's auto-generated `_id` timestamp).\n- `_id,desc` is always appended as a secondary tie-breaker sort if not explicitly specified.\n- Pass sort criteria as `sort=property(,asc|desc)`.\n\n### Creation Time Filtering:\n- Filter errors via `created.gte` (after), `created.lt` (before), etc.",
+        "operationId": "getSummaryErrors",
+        "parameters": [
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sorting criteria in the format: `property(,asc|desc)`. Default direction is `desc` on `_id` (creation time).. Allowed sort fields: [_id]",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "default": [
+                "_id,DESC"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "example": "_id,desc"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Zero-based page index (0..N)",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "minimum": 0
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "The size of the page to be returned",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 10,
+              "minimum": 1
+            }
+          },
+          {
+            "name": "created.eq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "created.neq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "created.gt",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "created.gte",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "created.lt",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "created.lte",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved dynamic error log documents",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageDynamicErrorDocument"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Default error response represented as RFC 7807 Problem Details",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/error-logs/rss-inspection": {
+      "get": {
+        "tags": [
+          "ErrorLogs"
+        ],
+        "summary": "List RSS Inspection Errors",
+        "description": "Retrieves a paginated list of dynamic error documents from the `rss_inspection_errors` collection.\n\n### Sorting Behavior:\n- Default sort: `_id,desc` (most recently created errors first, using MongoDB's auto-generated `_id` timestamp).\n- `_id,desc` is always appended as a secondary tie-breaker sort if not explicitly specified.\n- Pass sort criteria as `sort=property(,asc|desc)`.\n\n### Creation Time Filtering:\n- `before`: Filter errors created before this ISO-8601 timestamp (exclusive).\n- `after`: Filter errors created after this ISO-8601 timestamp (inclusive).",
+        "operationId": "getRssInspectionErrors",
+        "parameters": [
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sorting criteria in the format: `property(,asc|desc)`. Default direction is `desc` on `_id` (creation time).. Allowed sort fields: [_id]",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "default": [
+                "_id,DESC"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "example": "_id,desc"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Zero-based page index (0..N)",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "minimum": 0
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "The size of the page to be returned",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 10,
+              "minimum": 1
+            }
+          },
+          {
+            "name": "created.eq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "created.neq",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "created.gt",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "created.gte",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "created.lt",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "created.lte",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved dynamic error log documents",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageDynamicErrorDocument"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Default error response represented as RFC 7807 Problem Details",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/error-logs/facets/schema": {
+      "get": {
+        "tags": [
+          "ErrorLogs"
+        ],
+        "summary": "Get facet schema for Error Logs",
+        "description": "Returns the filter and sort capabilities schema manifest for dynamic frontends.",
+        "operationId": "getFacetSchema_6",
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved facet schema",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/FeatureFacetSchemaResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Default error response represented as RFC 7807 Problem Details",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/token-claims": {
+      "get": {
+        "tags": [
+          "auth-controller"
+        ],
+        "operationId": "getTokenClaims",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {}
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Default error response represented as RFC 7807 Problem Details",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/me": {
+      "get": {
+        "tags": [
+          "auth-controller"
+        ],
+        "operationId": "getCurrentUser",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserProfileDto"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Default error response represented as RFC 7807 Problem Details",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/overview": {
+      "get": {
+        "tags": [
+          "admin-controller"
+        ],
+        "operationId": "getAdminOverview",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {}
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Default error response represented as RFC 7807 Problem Details",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "YoutubeInspectionResponse": {
+        "type": "object",
+        "properties": {
+          "get_id": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "entryId": {
+            "type": "string"
+          },
+          "generationId": {
+            "type": "string"
+          },
+          "isCompilation": {
+            "type": "boolean"
+          },
+          "isPolitical": {
+            "type": "boolean"
+          },
+          "primaryTopic": {
+            "type": "string"
+          },
+          "matchedAgendaIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "agendaMatchScore": {
+            "type": "number",
+            "format": "double"
+          },
+          "topicTitle": {
+            "type": "string"
+          },
+          "isNewTopic": {
+            "type": "boolean"
+          },
+          "detectedEntities": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "briefSummary": {
+            "type": "string"
+          },
+          "rssEntry": {
+            "$ref": "#/components/schemas/YoutubeRssResponse"
+          },
+          "saveAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "pubDate": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "YoutubeRssResponse": {
+        "type": "object",
+        "properties": {
+          "get_id": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "videoId": {
+            "type": "string"
+          },
+          "saveAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "author": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "link": {
+            "type": "string"
+          },
+          "pubDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "channelId": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "thumbnailUrl": {
+            "type": "string"
+          }
+        }
+      },
+      "TranscriptResponse": {
+        "type": "object",
+        "properties": {
+          "get_id": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "videoId": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "link": {
+            "type": "string"
+          },
+          "pubDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "author": {
+            "type": "string"
+          },
+          "transcript": {
+            "type": "string"
+          },
+          "languageCode": {
+            "type": "string"
+          },
+          "language": {
+            "type": "string"
+          },
+          "isGenerated": {
+            "type": "boolean"
+          },
+          "channelId": {
+            "type": "string"
+          },
+          "cacheAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "tokenCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "duration": {
+            "type": "number",
+            "format": "double"
+          },
+          "segments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TranscriptSegmentResponse"
+            }
+          }
+        }
+      },
+      "TranscriptSegmentResponse": {
+        "type": "object",
+        "properties": {
+          "duration": {
+            "type": "number",
+            "format": "double"
+          },
+          "start": {
+            "type": "number",
+            "format": "double"
+          },
+          "text": {
+            "type": "string"
+          }
+        }
+      },
+      "SummaryClassificationResponse": {
+        "type": "object",
+        "properties": {
+          "get_id": {
+            "type": "string"
+          },
+          "entryId": {
+            "type": "string"
+          },
+          "isCompilation": {
+            "type": "boolean"
+          },
+          "isPolitical": {
+            "type": "boolean"
+          },
+          "primaryTopic": {
+            "type": "string"
+          },
+          "matchedAgendaIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "agendaMatchScore": {
+            "type": "number",
+            "format": "double"
+          },
+          "topicTitle": {
+            "type": "string"
+          },
+          "isNewTopic": {
+            "type": "boolean"
+          },
+          "detectedEntities": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "briefSummary": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "saveAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "pubDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "frequencyLastWeek": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "isLowFrequentPolitical": {
+            "type": "boolean"
+          }
+        }
+      },
+      "SummaryContentResponse": {
+        "type": "object",
+        "properties": {
+          "summary": {
+            "type": "string"
+          },
+          "keyPoints": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "importantDetails": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "conclusions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "takeaway": {
+            "type": "string"
+          }
+        }
+      },
+      "SummaryResponse": {
+        "type": "object",
+        "properties": {
+          "get_id": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "link": {
+            "type": "string"
+          },
+          "pubDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "author": {
+            "type": "string"
+          },
+          "languageCode": {
+            "type": "string"
+          },
+          "language": {
+            "type": "string"
+          },
+          "isGenerated": {
+            "type": "boolean"
+          },
+          "duration": {
+            "type": "string"
+          },
+          "channelId": {
+            "type": "string"
+          },
+          "cacheAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "content": {
+            "$ref": "#/components/schemas/SummaryContentResponse"
+          },
+          "rssEntry": {
+            "$ref": "#/components/schemas/YoutubeRssResponse"
+          },
+          "classification": {
+            "$ref": "#/components/schemas/SummaryClassificationResponse"
+          }
+        }
+      },
+      "CompletionTokensDetailsResponse": {
+        "type": "object",
+        "properties": {
+          "audioTokens": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "imageTokens": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "reasoningTokens": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "CostDetailsResponse": {
+        "type": "object",
+        "properties": {
+          "upstreamInferenceCompletionsCost": {
+            "type": "number",
+            "format": "double"
+          },
+          "upstreamInferenceCost": {
+            "type": "number",
+            "format": "double"
+          },
+          "upstreamInferencePromptCost": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "LlmGenerationMetadataResponse": {
+        "type": "object",
+        "properties": {
+          "generationId": {
+            "type": "string"
+          },
+          "modelUsed": {
+            "type": "string"
+          },
+          "saveAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "created": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "finishReason": {
+            "type": "string"
+          },
+          "nativeFinishReason": {
+            "type": "string"
+          },
+          "provider": {
+            "type": "string"
+          },
+          "reasoningLog": {
+            "type": "string"
+          },
+          "serviceTier": {
+            "type": "string"
+          },
+          "systemFingerprint": {
+            "type": "string"
+          },
+          "usage": {
+            "$ref": "#/components/schemas/LlmUsageResponse"
+          },
+          "dbId": {
+            "type": "string"
+          }
+        }
+      },
+      "LlmUsageResponse": {
+        "type": "object",
+        "properties": {
+          "completionTokens": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "completionTokensDetails": {
+            "$ref": "#/components/schemas/CompletionTokensDetailsResponse"
+          },
+          "cost": {
+            "type": "number",
+            "format": "double"
+          },
+          "costDetails": {
+            "$ref": "#/components/schemas/CostDetailsResponse"
+          },
+          "isByok": {
+            "type": "boolean"
+          },
+          "promptTokens": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "promptTokensDetails": {
+            "$ref": "#/components/schemas/PromptTokensDetailsResponse"
+          },
+          "totalTokens": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "PromptTokensDetailsResponse": {
+        "type": "object",
+        "properties": {
+          "audioTokens": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "cacheWriteTokens": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "cachedTokens": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "videoTokens": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "PageYoutubeRssResponse": {
+        "type": "object",
+        "properties": {
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageable": {
+            "$ref": "#/components/schemas/PageableObject"
+          },
+          "sort": {
+            "$ref": "#/components/schemas/SortObject"
+          },
+          "first": {
+            "type": "boolean"
+          },
+          "last": {
+            "type": "boolean"
+          },
+          "numberOfElements": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/YoutubeRssResponse"
+            }
+          },
+          "number": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "empty": {
+            "type": "boolean"
+          }
+        }
+      },
+      "PageableObject": {
+        "type": "object",
+        "properties": {
+          "paged": {
+            "type": "boolean"
+          },
+          "pageNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sort": {
+            "$ref": "#/components/schemas/SortObject"
+          },
+          "unpaged": {
+            "type": "boolean"
+          },
+          "offset": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "SortObject": {
+        "type": "object",
+        "properties": {
+          "sorted": {
+            "type": "boolean"
+          },
+          "unsorted": {
+            "type": "boolean"
+          },
+          "empty": {
+            "type": "boolean"
+          }
+        }
+      },
+      "FeatureFacetSchemaResponse": {
+        "type": "object",
+        "properties": {
+          "feature": {
+            "type": "string"
+          },
+          "resourcePath": {
+            "type": "string"
+          },
+          "sort": {
+            "$ref": "#/components/schemas/SortFacetMetadata"
+          },
+          "filters": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FilterFacetMetadata"
+            }
+          }
+        }
+      },
+      "FilterFacetMetadata": {
+        "type": "object",
+        "properties": {
+          "property": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "uiWidget": {
+            "type": "string"
+          },
+          "operators": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "SortFacetMetadata": {
+        "type": "object",
+        "properties": {
+          "defaultProperty": {
+            "type": "string"
+          },
+          "defaultDirection": {
+            "type": "string",
+            "enum": [
+              "ASC",
+              "DESC"
+            ]
+          },
+          "allowedProperties": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SortPropertyMetadata"
+            }
+          }
+        }
+      },
+      "SortPropertyMetadata": {
+        "type": "object",
+        "properties": {
+          "property": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          }
+        }
+      },
+      "PageYoutubeInspectionResponse": {
+        "type": "object",
+        "properties": {
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageable": {
+            "$ref": "#/components/schemas/PageableObject"
+          },
+          "sort": {
+            "$ref": "#/components/schemas/SortObject"
+          },
+          "first": {
+            "type": "boolean"
+          },
+          "last": {
+            "type": "boolean"
+          },
+          "numberOfElements": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/YoutubeInspectionResponse"
+            }
+          },
+          "number": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "empty": {
+            "type": "boolean"
+          }
+        }
+      },
+      "PageTranscriptListItemResponse": {
+        "type": "object",
+        "properties": {
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageable": {
+            "$ref": "#/components/schemas/PageableObject"
+          },
+          "sort": {
+            "$ref": "#/components/schemas/SortObject"
+          },
+          "first": {
+            "type": "boolean"
+          },
+          "last": {
+            "type": "boolean"
+          },
+          "numberOfElements": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TranscriptListItemResponse"
+            }
+          },
+          "number": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "empty": {
+            "type": "boolean"
+          }
+        }
+      },
+      "TranscriptListItemResponse": {
+        "type": "object",
+        "properties": {
+          "get_id": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "videoId": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "link": {
+            "type": "string"
+          },
+          "pubDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "author": {
+            "type": "string"
+          },
+          "languageCode": {
+            "type": "string"
+          },
+          "language": {
+            "type": "string"
+          },
+          "isGenerated": {
+            "type": "boolean"
+          },
+          "channelId": {
+            "type": "string"
+          },
+          "cacheAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "tokenCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "duration": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "PageTopicResponse": {
+        "type": "object",
+        "properties": {
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageable": {
+            "$ref": "#/components/schemas/PageableObject"
+          },
+          "sort": {
+            "$ref": "#/components/schemas/SortObject"
+          },
+          "first": {
+            "type": "boolean"
+          },
+          "last": {
+            "type": "boolean"
+          },
+          "numberOfElements": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TopicResponse"
+            }
+          },
+          "number": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "empty": {
+            "type": "boolean"
+          }
+        }
+      },
+      "TopicResponse": {
+        "type": "object",
+        "properties": {
+          "get_id": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "eventTitle": {
+            "type": "string"
+          },
+          "firstDetected": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "lastSeen": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "primaryTopic": {
+            "type": "string"
+          },
+          "videoCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "videoIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "PageSummaryListItemResponse": {
+        "type": "object",
+        "properties": {
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageable": {
+            "$ref": "#/components/schemas/PageableObject"
+          },
+          "sort": {
+            "$ref": "#/components/schemas/SortObject"
+          },
+          "first": {
+            "type": "boolean"
+          },
+          "last": {
+            "type": "boolean"
+          },
+          "numberOfElements": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SummaryListItemResponse"
+            }
+          },
+          "number": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "empty": {
+            "type": "boolean"
+          }
+        }
+      },
+      "SummaryContentListItemResponse": {
+        "type": "object",
+        "properties": {
+          "summary": {
+            "type": "string"
+          },
+          "takeaway": {
+            "type": "string"
+          }
+        }
+      },
+      "SummaryListItemResponse": {
+        "type": "object",
+        "properties": {
+          "get_id": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "link": {
+            "type": "string"
+          },
+          "pubDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "author": {
+            "type": "string"
+          },
+          "languageCode": {
+            "type": "string"
+          },
+          "language": {
+            "type": "string"
+          },
+          "isGenerated": {
+            "type": "boolean"
+          },
+          "duration": {
+            "type": "string"
+          },
+          "channelId": {
+            "type": "string"
+          },
+          "cacheAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "content": {
+            "$ref": "#/components/schemas/SummaryContentListItemResponse"
+          },
+          "rssEntry": {
+            "$ref": "#/components/schemas/YoutubeRssResponse"
+          },
+          "classification": {
+            "$ref": "#/components/schemas/SummaryClassificationResponse"
+          }
+        }
+      },
+      "LlmGenerationMetadataListResponse": {
+        "type": "object",
+        "properties": {
+          "generationId": {
+            "type": "string"
+          },
+          "modelUsed": {
+            "type": "string"
+          },
+          "saveAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "created": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "finishReason": {
+            "type": "string"
+          },
+          "nativeFinishReason": {
+            "type": "string"
+          },
+          "provider": {
+            "type": "string"
+          },
+          "serviceTier": {
+            "type": "string"
+          },
+          "systemFingerprint": {
+            "type": "string"
+          },
+          "usage": {
+            "$ref": "#/components/schemas/LlmUsageResponse"
+          },
+          "dbId": {
+            "type": "string"
+          }
+        }
+      },
+      "PageLlmGenerationMetadataListResponse": {
+        "type": "object",
+        "properties": {
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageable": {
+            "$ref": "#/components/schemas/PageableObject"
+          },
+          "sort": {
+            "$ref": "#/components/schemas/SortObject"
+          },
+          "first": {
+            "type": "boolean"
+          },
+          "last": {
+            "type": "boolean"
+          },
+          "numberOfElements": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LlmGenerationMetadataListResponse"
+            }
+          },
+          "number": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "empty": {
+            "type": "boolean"
+          }
+        }
+      },
+      "DynamicErrorDocument": {
+        "type": "object",
+        "description": "Envelope containing standard identifiers and the raw dynamic MongoDB error document",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "MongoDB auto-generated document ID (encodes creation time)",
+            "example": "66e9a3f81234567890abcdef"
+          },
+          "collection": {
+            "type": "string",
+            "description": "Name of the MongoDB error collection where this error originated",
+            "example": "rss_inspection_errors"
+          },
+          "document": {
+            "type": "object",
+            "additionalProperties": {},
+            "description": "Raw dynamic MongoDB error document containing arbitrary BSON fields"
+          }
+        }
+      },
+      "PageDynamicErrorDocument": {
+        "type": "object",
+        "properties": {
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageable": {
+            "$ref": "#/components/schemas/PageableObject"
+          },
+          "sort": {
+            "$ref": "#/components/schemas/SortObject"
+          },
+          "first": {
+            "type": "boolean"
+          },
+          "last": {
+            "type": "boolean"
+          },
+          "numberOfElements": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DynamicErrorDocument"
+            }
+          },
+          "number": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "empty": {
+            "type": "boolean"
+          }
+        }
+      },
+      "UserProfileDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "username": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "roles": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "uniqueItems": true
+          },
+          "authorities": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "uniqueItems": true
+          }
+        }
+      },
+      "ProblemDetail": {
+        "properties": {
+          "type": {
+            "type": "string",
+            "format": "uri"
+          },
+          "title": {
+            "type": "string"
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "detail": {
+            "type": "string"
+          },
+          "instance": {
+            "type": "string",
+            "format": "uri"
+          },
+          "properties": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object"
+            }
+          }
+        }
+      }
+    }
+  }
+}
