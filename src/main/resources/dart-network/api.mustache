@@ -101,7 +101,7 @@ class {{{vendorExtensions.x-operation-id-pascal}}}RequestSchema extends FormData
 ///
 /// {{{httpMethod}}} {{{path}}}
 class {{{vendorExtensions.x-operation-id-pascal}}}Command extends {{x-dart-base-request-name}}<{{{vendorExtensions.x-return-schema-name}}}> {
-  {{{vendorExtensions.x-operation-id-pascal}}}Command({{#hasParams}}{
+  {{{vendorExtensions.x-operation-id-pascal}}}Command({
   {{#allParams}}
   {{^isBodyParam}}
   {{^isFormParam}}
@@ -120,7 +120,8 @@ class {{{vendorExtensions.x-operation-id-pascal}}}Command extends {{x-dart-base-
   {{#vendorExtensions.x-is-binary-response}}
     this.binaryResponseType = const InMemoryBinaryResponse(),
   {{/vendorExtensions.x-is-binary-response}}
-  }{{/hasParams}}{{^hasParams}}{{#vendorExtensions.x-is-binary-response}}{this.binaryResponseType = const InMemoryBinaryResponse()}{{/vendorExtensions.x-is-binary-response}}{{/hasParams}}){{#vendorExtensions.x-has-json-body}} : _payload = {{{vendorExtensions.x-operation-id-pascal}}}RequestSchema(data: {{{bodyParam.paramName}}}){{/vendorExtensions.x-has-json-body}}{{#vendorExtensions.x-is-multipart}} : _payload = {{{vendorExtensions.x-operation-id-pascal}}}RequestSchema(
+    this.extraQueryParameters = const [],
+  }){{#vendorExtensions.x-has-json-body}} : _payload = {{{vendorExtensions.x-operation-id-pascal}}}RequestSchema(data: {{{bodyParam.paramName}}}){{/vendorExtensions.x-has-json-body}}{{#vendorExtensions.x-is-multipart}} : _payload = {{{vendorExtensions.x-operation-id-pascal}}}RequestSchema(
         {{#formParams}}
           {{{paramName}}}: {{{paramName}}},
         {{/formParams}}
@@ -155,6 +156,8 @@ class {{{vendorExtensions.x-operation-id-pascal}}}Command extends {{x-dart-base-
   final BinaryResponseType binaryResponseType;
 
   {{/vendorExtensions.x-is-binary-response}}
+  final List<QueryParameter> extraQueryParameters;
+
   @override
   String get path {
     var p = r'{{{path}}}';
@@ -169,9 +172,9 @@ class {{{vendorExtensions.x-operation-id-pascal}}}Command extends {{x-dart-base-
     return p;
   }
 
-  {{#vendorExtensions.x-has-query-params}}
   @override
   List<QueryParameter> get queryParameters => [
+    {{#vendorExtensions.x-has-query-params}}
     {{#queryParams}}
     {{#vendorExtensions.x-is-inline-enum}}
     {{#required}}
@@ -200,9 +203,10 @@ class {{{vendorExtensions.x-operation-id-pascal}}}Command extends {{x-dart-base-
     {{/vendorExtensions.x-is-map-query-param}}
     {{/vendorExtensions.x-is-inline-enum}}
     {{/queryParams}}
+    {{/vendorExtensions.x-has-query-params}}
+    ...extraQueryParameters,
   ];
 
-  {{/vendorExtensions.x-has-query-params}}
   @override
   HttpRequestMethod get method => HttpRequestMethod.{{{vendorExtensions.x-http-method-enum}}};
 
