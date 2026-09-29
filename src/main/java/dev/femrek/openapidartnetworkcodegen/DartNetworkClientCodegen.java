@@ -142,6 +142,12 @@ public class DartNetworkClientCodegen extends AbstractDartCodegen {
     }
 
     @Override
+    public String toParamName(String name) {
+        // Treat dots as word separators instead of the Dart generator's "Period" replacement.
+        return super.toParamName(name.replace(".", "_"));
+    }
+
+    @Override
     public String toModelFilename(String name) {
         return toSnakeCaseFilename(name);
     }
