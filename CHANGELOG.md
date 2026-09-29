@@ -1,3 +1,12 @@
+## 0.2.2 - 2026-09-29
+
+
+
+### 🚀 Features
+
+- Feat: add support for extra query parameters in all generated command class
+
+
 ## 0.2.1 - 2026-09-29
 
 
